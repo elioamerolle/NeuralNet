@@ -189,7 +189,7 @@ class NeuralNetwork(list):
         #iterating throuhg minibatch
         for i in minibatch:
             #Has all the derivatives also 3D of form [[[dC/dw1],...],...]
-            fnlDervtvLst = Funcs.addMats(fnlDervtvLst, BP.getDerivatives([], 0, self, [], firstCall = True, groundTruth = i[1]))
+            fnlDervtvLst = Funcs.addMats(fnlDervtvLst, BP.getDerivatives([], 0, self, [], groundTruth = i[1]))
 
         self.update(fnlDervtvLst)
 

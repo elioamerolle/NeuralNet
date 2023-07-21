@@ -7,7 +7,7 @@ from Vars import Vars
 
 l1 = [0.2, 0.5, 0.6]
 
-myNet = NeuralNetwork(l1, [4, 3, 2])
+myNet = NeuralNetwork(l1, [4])
 
 
 
@@ -32,7 +32,11 @@ print("AFTER ACTIVATED \n")
 myNet.print()
 
 
+#print(BP.getFirstDerivatives(myNet, [1, 0.5, 1, 0.5]))
 
+print("Here is the deriv list coming \n")
+print("NN length " + str(len(myNet)))
+print(BP.getDerivatives([], 0, myNet, [], [1, 0.5, 1, 0.5]))
 
 
 """
