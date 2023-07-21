@@ -42,14 +42,17 @@ class BackPropagation(object):
 
             func(iter + 1, storedList, derivativeList)
 
-        
+        TODO:
+
+            - Set up derivativeList for 0 < iteration
+            - Set up getting the derivatives for 0 < iteration
 
     """
 
     def getDerivatives(derivativeList, iteration, neuralNetwork, returnList, groundTruth = None):
         if iteration < len(neuralNetwork) - 1:
             if iteration == 0:
-                print("ENTERED IF")
+                #get the initial set of of helpful derivatives
                 derivativeList = BackPropagation.getFirstDerivatives(neuralNetwork, groundTruth)
                 
                 #list of lists for derivatives of perceptrons
@@ -60,34 +63,41 @@ class BackPropagation(object):
                     #list of Derivatives for a particular perceptron
                     perceptronDerivs = []
                     
+                    #add the partial for b or dCbyda * dabydz
+                    perceptronDerivs.append(derivativeList[i])
+                    
+                    sum = 0
+
                     #iterate through the connections to this particular perceptron
                     for j in range(len(neuralNetwork[-1][i].weight)):
                         #Append dCbyda * dabydz * dzbydw to the perceptronDerivs
-                        perceptronDerivs.append(derivativeList[i] * neuralNetwork[-2][j].getActivation())
+                        perceptronDerivs.insert(0, derivativeList[i] * neuralNetwork[-2][j].getActivation())
 
-                    #add the partial for b or dCbyda * dabydz
-                    perceptronDerivs.append(derivativeList[i])
+                        #WRONG ERROR
+                        sum += neuralNetwork[-1][i].weight[j]
+
+                    #AT THIS POINT ALL DERIVATIVES FOR returnList ARE SET UP NOW ALL ABOUT MAKING USEFUL ONES GOOD
+                    #WRONG
+                    derivativeList[i] *= sum
+
+                    #Update the values in helpful derivatives list
+
+                    #add these derivatives this particular perceptron to our layerlist
                     layerlist.append(perceptronDerivs)
 
 
                 returnList.append(layerlist)
 
-                print("returnList 1")
-                print(returnList)
-
-                return BackPropagation.getDerivatives(derivativeList, iteration + 1, neuralNetwork, returnList)
+                
 
             else:
+
                 pass
             
-            print("returnList 2")
-            print(returnList)
+            return BackPropagation.getDerivatives(derivativeList, iteration + 1, neuralNetwork, returnList)
+
 
         else:
-            print("returnList 3")
-            print(returnList)
-
-            print("\n\n\n")
 
             return returnList
 
