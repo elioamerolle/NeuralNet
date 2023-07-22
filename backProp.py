@@ -7,6 +7,7 @@ class BackPropagation(object):
     #returns the derivates dCbyda * dabydz when we are starting out
     def getFirstDerivatives(neuralNetwork, grounTruth):
         retList = []
+        
         for i in range(neuralNetwork.layerDimensions[-1]):
             perceptron  = neuralNetwork[-1][i]
 
@@ -82,15 +83,13 @@ class BackPropagation(object):
 
             newderivativeList = [0] * length
 
-            print("iteration " + str(iteration))
-            print("currentLay " + str(currentLayer))
 
             for e in range(length):
                 for m in range(len(derivativeList)):
                     newderivativeList[e] += derivativeList[m] * neuralNetwork[currentLayer][m].weight[e]
                 
 
-            returnList.append(layerlist)
+            returnList.insert(0, layerlist)
 
             
             return BackPropagation.getDerivatives(newderivativeList, iteration + 1, neuralNetwork, returnList)
@@ -99,6 +98,22 @@ class BackPropagation(object):
         else:
 
             return returnList
+
+
+    def printDerivList(derivs):
+        for i in range(len(derivs)):
+            print("LAYER: " + str(i + 1) + "\n")
+            for j in range(len(derivs[i])):
+                print("perceptron in layer: " + str(i + 1) + " and level: " + str(j) + " activations: \n")
+                
+                print("weights: \n")
+                print(derivs[i][j][:-1])
+
+                print("\n")
+
+
+                print("bias: \n")
+                print(derivs[i][j][-1])
 
     
 

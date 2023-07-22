@@ -6,11 +6,36 @@ import numpy as np
 
 class Funcs:
 
+    def mnistExpectedBin(x):
+        retlist = [0] * 10
+
+        for i in range(10):
+            if i == x:
+                retlist[i] = 1
+
+        return retlist
+
+
+
+    def flatten(l1):
+        retlist = []
+
+        for i in l1:
+            for j in i:
+                retlist.append(j)
+
+        return retlist
+
+
     def rando():
         return (random.random() - 0.5) * 2
 
 
     def cost(outPut, grndTrth):
+        numTypes = [int, DoubleVar, float]
+        
+        #print(outPut)
+        #print(grndTrth)
 
         if (isinstance(outPut, list) and isinstance(grndTrth, list)) and (len(outPut) == len(grndTrth)):
             sum = 0
@@ -19,7 +44,7 @@ class Funcs:
 
             return sum
 
-        if (isinstance(outPut, int) and isinstance(grndTrth, int)):
+        if type(outPut) in numTypes and type(grndTrth) in numTypes:
             return (outPut - grndTrth) ** 2
 
         else:

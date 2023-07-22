@@ -45,17 +45,18 @@ class Perceptron:
             raise Exception("Error: cannot set bias for input nodes")
 
 
-    def subWeight(self, deltaW):
+    def subWeight(self, deltaW, step):
+        
         if len(deltaW) == len(self.weight):
             for i in range(len(deltaW)):
-                self.weight[i] -= deltaW[i]
+                self.weight[i] -= deltaW[i] * step
 
         else:
             raise Exception("Error: inputted list is not the same size as the weight list")
 
 
-    def subBias(self, deltaB):
-        self.bias -= deltaB
+    def subBias(self, deltaB, step):
+        self.bias -= deltaB * step
 
 
     def setWeightBias(self, weight, bias):

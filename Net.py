@@ -2,6 +2,8 @@
 from Funcs import Funcs
 from backProp import BackPropagation as BP
 from Percept import Perceptron
+import copy
+
 
 class NeuralNetwork(list):
     # the class for the Neural Network that inherits properties and methods from the list data type
@@ -64,9 +66,14 @@ class NeuralNetwork(list):
         
         return self.inputValues
     
-    def activate(self):
+    def activate(self, input, printBool = False):
         # activates all the perceptrons in the network
-        
+        if printBool:
+            print("we start activated")
+
+        for i in range(len(self[0])):
+            self[0][i].setActivation(input[i])
+
         for i in range(len(self) - 1):
             # loops through each layers
             # print(i)
@@ -75,6 +82,9 @@ class NeuralNetwork(list):
                 # print(j)
                 self[i + 1][j].activate()
                 # activates the individual perceptron
+        
+        if printBool:
+            print("finished activated")
     
     def getPerceptronData(self):
         # gets all the total weight
@@ -104,8 +114,8 @@ class NeuralNetwork(list):
                 returnWeightsList.append(perceptronData)
                 # adds the weight of the perceptron
             
-            print(len(self[layerIndex]))
-            print(len(returnWeightsList))
+            #print(len(self[layerIndex]))
+            #print(len(returnWeightsList))
             
             returnList.append(returnWeightsList)
             # adds the weights list
@@ -180,29 +190,127 @@ class NeuralNetwork(list):
             print("\n")
 
 
-    def update(self, drivs):
-        for i in range(len(self)):
-            for j in range(len(self[i])):
-                self[i][j].subWeight(drivs[i][j][:-1])
-                self[i][j].subBias(drivs[i][j][-1])
+    def update(self, drivs, step):
+        for i in range(len(self) - 1):
+            for j in range(len(self[i + 1])):
+            
+                try:
+                    self[i + 1][j].subWeight(drivs[i][j][:-1], step)
+                    self[i + 1][j].subBias(drivs[i][j][-1], step)
+                
+                except IndexError:
+                    print("Error index i " + str(i))
+                    #print(len(drivs))
+                    print(drivs)
 
+                    print("Error index j " + str(j))
+                    raise(IndexError("Wrong index"))
 
     #function responsible for making the NN learn
-    def learn(self, minibatch):
+    def learn(self, minibatch, groundTruths):
         #Takes 3D array as input of form [[[Data for input layer], [Ground Truth]],...]
         
         #List with all the derivatives
         fnlDervtvLst = []
 
         #iterating throuhg minibatch
-        for i in minibatch:
+        for i in range(len(minibatch)):
             #Has all the derivatives also 3D of form [[[dC/dw1],...],...]
-            fnlDervtvLst = Funcs.addMats(fnlDervtvLst, BP.getDerivatives([], 0, self, [], groundTruth = i[1]))
+            self.activate(minibatch[i])
 
-        self.update(fnlDervtvLst)
+            fnlDervtvLst = Funcs.addMats(fnlDervtvLst, BP.getDerivatives([], 0, self, [], groundTruth = groundTruths[i]))
 
-    def testLearn(self, groundTruth):
-        pass
+
+        step = 1
+
+        trashNet = copy.deepcopy(self)
+
+        #print("RIGHT BEFORE PROPB UPDATE")
+        #print(fnlDervtvLst)
+
+        trashNet.update(fnlDervtvLst, step)
+        
+        sumTrash = 0
+        sum = 0
+
+        for i in range(len(minibatch)):
+            trashNet.activate(minibatch[i])
+            sumTrash += Funcs.cost(trashNet.getActivation(-1), groundTruths[i]) 
+            self.activate(minibatch[i])
+            sum += Funcs.cost(self.getActivation(-1), groundTruths[i]) 
+            
+
+        if sumTrash < sum:
+            #print("should get better")
+            
+            self.update(fnlDervtvLst, step)
+
+        else:
+            #print("might not get better")
+
+            step *= 0.1
+
+            self.update(fnlDervtvLst, step)
+    
+        
+
+
+
+    def getCost(self, groundTruth):
+        sum = 0
+        for i in range(len(self[-1])):
+            if type(groundTruth) == list:
+                sum += (groundTruth[i] - self[-1][i].getActivation()) ** 2
+            else:
+                #print("GT: " + str(groundTruth))
+                #print("Activation: " + str(self[-1][i].getActivation()))
+
+                sum += (groundTruth - self[-1][i].getActivation()) ** 2
+
+        
+        return sum
+
+    def testLearn(self, input, derivs, groundTruth):
+        print("Initial cost: " + str(self.getCost(groundTruth)))
+        
+        for i in range(1000):
+            step = 1
+
+            trashNet = copy.deepcopy(self)
+
+            trashNet.update(derivs, step)
+            
+            trashNet.activate(input)
+            
+            print("trash" + str(trashNet.getCost(groundTruth)))
+            print("real" + str(self.getCost(groundTruth)))
+
+            nextBreak = False
+
+            if trashNet.getCost(groundTruth) < self.getCost(groundTruth):
+                self = trashNet
+            else:
+                while trashNet.getCost(groundTruth) > self.getCost(groundTruth):
+                    print("in while ")
+
+                    step *= 0.1
+
+                    trashNet.update(derivs, step)
+            
+                    trashNet.activate()
+                    
+                    if step < 0.00001:
+                        nextBreak = True
+                        break
+
+            if nextBreak:
+                break
+
+            print("Cost after update " + str(i) + ": " + str(self.getCost(groundTruth)))
+
+    
+
+        
 
 
 
