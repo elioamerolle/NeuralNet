@@ -179,6 +179,14 @@ class NeuralNetwork(list):
             
             print("\n")
 
+
+    def update(self, drivs):
+        for i in range(len(self)):
+            for j in range(len(self[i])):
+                self[i][j].subWeight(drivs[i][j][:-1])
+                self[i][j].subBias(drivs[i][j][-1])
+
+
     #function responsible for making the NN learn
     def learn(self, minibatch):
         #Takes 3D array as input of form [[[Data for input layer], [Ground Truth]],...]
@@ -193,11 +201,11 @@ class NeuralNetwork(list):
 
         self.update(fnlDervtvLst)
 
+    def testLearn(self, groundTruth):
+        pass
 
 
-    
 
 
-    def update(self, drivs):
-        print("Not Implemented")
-
+                
+            

@@ -55,46 +55,45 @@ class BackPropagation(object):
                 #get the initial set of of helpful derivatives
                 derivativeList = BackPropagation.getFirstDerivatives(neuralNetwork, groundTruth)
                 
-                #list of lists for derivatives of perceptrons
-                layerlist = []
+            currentLayer = - (iteration + 1)
+            
+            #list of lists for derivatives of perceptrons
+            layerlist = []
 
-                #iterate through perceptrons in final layer
-                for i in range(len(neuralNetwork[-1])):
-                    #list of Derivatives for a particular perceptron
-                    perceptronDerivs = []
-                    
-                    #add the partial for b or dCbyda * dabydz
-                    perceptronDerivs.append(derivativeList[i])
-                    
-                    sum = 0
+            #iterate through perceptrons in final layer
+            for i in range(len(neuralNetwork[currentLayer])):
+                #list of Derivatives for a particular perceptron
+                perceptronDerivs = []
+                
+                #iterate through the connections to this particular perceptron
+                for j in range(len(neuralNetwork[currentLayer][i].weight)):
+                    #Append dCbyda * dabydz * dzbydw to the perceptronDerivs
+                    perceptronDerivs.append(derivativeList[i] * neuralNetwork[currentLayer - 1][j].getActivation())
 
-                    #iterate through the connections to this particular perceptron
-                    for j in range(len(neuralNetwork[-1][i].weight)):
-                        #Append dCbyda * dabydz * dzbydw to the perceptronDerivs
-                        perceptronDerivs.insert(0, derivativeList[i] * neuralNetwork[-2][j].getActivation())
+                #add the partial for b or dCbyda * dabydz
+                perceptronDerivs.append(derivativeList[i])
 
-                        #WRONG ERROR
-                        sum += neuralNetwork[-1][i].weight[j]
+                layerlist.append(perceptronDerivs)
 
-                    #AT THIS POINT ALL DERIVATIVES FOR returnList ARE SET UP NOW ALL ABOUT MAKING USEFUL ONES GOOD
-                    #WRONG
-                    derivativeList[i] *= sum
+            #AT THIS POINT ALL DERIVATIVES FOR returnList ARE SET UP NOW ALL ABOUT MAKING USEFUL ONES GOOD
+            
+            #The length of our new helpful list the length of the next colum
+            length = len(neuralNetwork[currentLayer - 1])
 
-                    #Update the values in helpful derivatives list
+            newderivativeList = [0] * length
 
-                    #add these derivatives this particular perceptron to our layerlist
-                    layerlist.append(perceptronDerivs)
+            print("iteration " + str(iteration))
+            print("currentLay " + str(currentLayer))
 
-
-                returnList.append(layerlist)
-
+            for e in range(length):
+                for m in range(len(derivativeList)):
+                    newderivativeList[e] += derivativeList[m] * neuralNetwork[currentLayer][m].weight[e]
                 
 
-            else:
+            returnList.append(layerlist)
 
-                pass
             
-            return BackPropagation.getDerivatives(derivativeList, iteration + 1, neuralNetwork, returnList)
+            return BackPropagation.getDerivatives(newderivativeList, iteration + 1, neuralNetwork, returnList)
 
 
         else:
