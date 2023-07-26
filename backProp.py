@@ -55,7 +55,8 @@ class BackPropagation(object):
             if iteration == 0:
                 #get the initial set of of helpful derivatives
                 derivativeList = BackPropagation.getFirstDerivatives(neuralNetwork, groundTruth)
-                
+            
+            #due to how python indexes lists with negative numbers
             currentLayer = - (iteration + 1)
             
             #list of lists for derivatives of perceptrons
@@ -83,13 +84,17 @@ class BackPropagation(object):
 
             newderivativeList = [0] * length
 
-
-            for e in range(length):
-                for m in range(len(derivativeList)):
-                    newderivativeList[e] += derivativeList[m] * neuralNetwork[currentLayer][m].weight[e]
-                
-
             returnList.insert(0, layerlist)
+
+
+            if iteration < len(neuralNetwork) - 2:
+                
+                for e in range(length):
+                    for m in range(len(derivativeList)):
+                        newderivativeList[e] += derivativeList[m] * neuralNetwork[currentLayer][m].weight[e]
+                    
+                    newderivativeList[e] *= Funcs.sigDeriv(neuralNetwork[currentLayer - 1][e].preSigmoidActivation())
+
 
             
             return BackPropagation.getDerivatives(newderivativeList, iteration + 1, neuralNetwork, returnList)

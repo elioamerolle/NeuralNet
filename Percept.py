@@ -86,6 +86,11 @@ class Perceptron:
         # gets the layer depth
         layerDepth = self.indices[0]
         
+        print("perceptron index: " + str(self.indices))
+        print("self.weight" + str(self.weight))
+        print("self.neuralNetwork.getActivation" + str(self.neuralNetwork.getActivation(layerDepth - 1)))
+
+
         # gets the dot product of the weights and the bias
         return Funcs.dotPr(self.weight, self.neuralNetwork.getActivation(layerDepth - 1)) + self.bias
 

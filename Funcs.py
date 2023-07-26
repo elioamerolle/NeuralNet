@@ -6,6 +6,34 @@ import numpy as np
 
 class Funcs:
 
+    def asker(myNet, mnist):
+        while True:
+    
+            index = int(input("WHAT INDEX FROM MNIST WOULD YOU LIKE TO SAMPLE ON OUR NET \n"))
+
+            print("THE TARGET VALUE FOR THIS INDEX IS " + str(mnist.target[index]) + "\n")
+
+            myNet.activate(Funcs.flatten(mnist.images[index]), True)
+
+            print("THE OUTPUT LAYER IS AS FOLLOW \n")
+
+            print(myNet.getActivation(-1))
+
+            maxInd = 0
+            for i in range(len(myNet.getActivation(-1))):
+                    if myNet.getActivation(-1)[maxInd] < myNet.getActivation(-1)[i]:
+                        maxInd = i
+
+            print("THE NEURAL NET HAS GUESSED " + str(maxInd) + "\n")
+
+            continueStr = input("WOULD YOU LIKE TO TRY ANOTHER (y/n)" + "\n")
+
+            if continueStr == "n":
+                    break
+
+            print("\n\n\n\n\n")
+
+
     def mnistExpectedBin(x):
         retlist = [0] * 10
 
@@ -53,7 +81,6 @@ class Funcs:
 
     def sig(x):
         return 1/(1 + np.exp(-x))
-
 
 
     def sigDeriv(x):

@@ -21,11 +21,13 @@ myNet.create()
 dataClean = []
 expectedClean = []
 
+#We will use 1600 images
+
 #80 minibatches of 20
-for i in range(1):
+for i in range(80):
       miniBatch = []
       expVals = []
-      for j in range(1):
+      for j in range(20):
             miniBatch.append(Funcs.flatten(mnist.images[i*20 + j]))
             expVals.append(Funcs.mnistExpectedBin(mnist.target[i*20 + j]))
 
@@ -33,15 +35,101 @@ for i in range(1):
       dataClean.append(miniBatch)
 
 
-for i in range(100):
+for i in range(len(dataClean)):
       myNet.learn(dataClean[i], expectedClean[i])
 
 
+
+while True:
+
+      index = int(input("WHAT INDEX FROM MNIST WOULD YOU LIKE TO SAMPLE ON OUR NET \n"))
+
+      print("THE TARGET VALUE FOR THIS INDEX IS " + str(mnist.target[index]) + "\n")
+
+      myNet.activate(Funcs.flatten(mnist.images[index]), True)
+
+      print("THE OUTPUT LAYER IS AS FOLLOW \n")
+
+      print(myNet.getActivation(-1))
+
+      maxInd = 0
+      for i in range(len(myNet.getActivation(-1))):
+            if myNet.getActivation(-1)[maxInd] < myNet.getActivation(-1)[i]:
+                  maxInd = i
+
+      print("THE NEURAL NET HAS GUESSED " + str(maxInd) + "\n")
+
+      continueStr = input("WOULD YOU LIKE TO TRY ANOTHER (y/n)" + "\n")
+
+      if continueStr == "n":
+            break
+
+      print("\n\n\n\n\n")
 
 
 
 
 """
+for i in range(len(myNet) - 1):
+      for j in range(len(myNet[i + 1])):
+            print("at " + str(i + 1) + ", " + str(j) + " " + str(dervis[i + 1][j]))
+
+"""
+
+
+"""
+
+
+                              =============================
+
+                              Test CODE
+
+                              =============================
+
+
+
+l1 = [0] * 4
+
+myNet = NeuralNetwork(l1, [3,2])
+
+myNet.create()
+
+myNet.activate([0.5,0.8,0.1,0.2])
+
+myNet.print()
+
+for i in range(len(myNet) - 1):
+      print("IN LAYER" + str(i + 1))
+
+      for j in range(len(myNet[i + 1])):
+            print("LEVEL" + str(j))
+            
+            print(myNet[i + 1][j].weight)
+            
+            print("bias: " + str(myNet[i + 1][j].bias))
+
+            print("\n")
+
+
+      print("\n\n")
+
+dervis = BP.getDerivatives([], 0, myNet, [], groundTruth = [0.75, 0.25])
+
+
+for i in range(len(dervis)):
+      print("Layer " + str(i))
+      print(dervis[i])
+
+
+
+
+                              =============================
+
+                              Test CODE
+
+                              =============================
+
+
 
 
                               =============================
