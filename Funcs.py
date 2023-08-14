@@ -26,12 +26,8 @@ class Funcs:
 
             print("THE NEURAL NET HAS GUESSED " + str(maxInd) + "\n")
 
-            continueStr = input("WOULD YOU LIKE TO TRY ANOTHER (y/n)" + "\n")
 
-            if continueStr == "n":
-                    break
-
-            print("\n\n\n\n\n")
+            print("\n\n\n")
 
 
     def mnistExpectedBin(x):

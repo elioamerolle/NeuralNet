@@ -62,8 +62,8 @@ class Perceptron:
     def setWeightBias(self, weight, bias):
         # a function to set both the weight bias
         if not self.isInputLayer:
-            self.weight = weight
-            self.bias = bias
+            self.setWeight(weight)
+            self.setBias(bias)
 
         else:
             raise Exception("Error: cannot set weights and biasis to input (has no meaning)")
@@ -86,9 +86,9 @@ class Perceptron:
         # gets the layer depth
         layerDepth = self.indices[0]
         
-        print("perceptron index: " + str(self.indices))
-        print("self.weight" + str(self.weight))
-        print("self.neuralNetwork.getActivation" + str(self.neuralNetwork.getActivation(layerDepth - 1)))
+        #print("perceptron index: " + str(self.indices))
+        #print("self.weight" + str(self.weight))
+        #print("self.neuralNetwork.getActivation" + str(self.neuralNetwork.getActivation(layerDepth - 1)))
 
 
         # gets the dot product of the weights and the bias

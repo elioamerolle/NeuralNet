@@ -171,20 +171,27 @@ class NeuralNetwork(list):
         return returnList
 
 
-    def print(self):
+    def print(self, beforeSig = False):
         # a function for printing 
-        
         print("Depth: " + str(len(self)))
 
         for i in range(len(self)):
             # loops through each layers
             
-            print("Layer " + str(i) + "  has acts:")
-            
-            for j in self[i]:
+            if beforeSig:
+                print("Layer " + str(i) + "  has before Sig acts:")
+            else:
+                print("Layer " + str(i) + "  has acts:")
+
+            for j in range(len(self[i])):
                 # loops through each perceptron
                 
-                print(j.getActivation())
+                if beforeSig:
+                    if i != 0:
+                        print(self[i][j].preSigmoidActivation())
+                else:
+                    print(self[i][j].getActivation())
+
                 # prints the activation value
             
             print("\n")
@@ -207,11 +214,13 @@ class NeuralNetwork(list):
                     raise(IndexError("Wrong index"))
 
     #function responsible for making the NN learn
-    def learn(self, minibatch, groundTruths):
+    def learn(self, minibatch, groundTruths, data):
         #Takes 3D array as input of form [[[Data for input layer], [Ground Truth]],...]
         
         #List with all the derivatives
         fnlDervtvLst = []
+
+        data.append(self.getMiniBatchCost(minibatch, groundTruths))
 
         #iterating throuhg minibatch
         for i in range(len(minibatch)):
@@ -254,10 +263,13 @@ class NeuralNetwork(list):
     
         
 
-
-
     def getCost(self, groundTruth):
         sum = 0
+
+        #print("GT: " + str(groundTruth))
+        #print("Out: " + str(self.getActivation(-1)))
+
+
         for i in range(len(self[-1])):
             if type(groundTruth) == list:
                 sum += (groundTruth[i] - self[-1][i].getActivation()) ** 2
@@ -269,6 +281,35 @@ class NeuralNetwork(list):
 
         
         return sum
+
+    
+    def getCostFromIn(self, input, groundTruth):
+        sum = 0
+
+        self.activate(input)
+
+        for i in range(len(self[-1])):
+            if type(groundTruth) == list:
+                sum += (groundTruth[i] - self[-1][i].getActivation()) ** 2
+            else:
+                #print("GT: " + str(groundTruth))
+                #print("Activation: " + str(self[-1][i].getActivation()))
+
+                sum += (groundTruth - self[-1][i].getActivation()) ** 2
+
+        
+        return sum
+
+        pass
+
+
+    def getMiniBatchCost(self, minibatch, groundTruths):
+        sum = 0
+        for i in range(len(minibatch)):
+            sum += self.getCostFromIn(minibatch[i], groundTruths[i])
+        
+        return sum
+
 
     def testLearn(self, input, derivs, groundTruth):
         print("Initial cost: " + str(self.getCost(groundTruth)))

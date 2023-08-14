@@ -8,63 +8,77 @@ from backProp import BackPropagation as BP
 from Funcs import Funcs
 from Vars import Vars
 
+from tqdm import tqdm
 
 
 mnist = load_digits()
 
 l1 = [0] * 64
 
-myNet = NeuralNetwork(l1, [50,25,10])
+myNet = NeuralNetwork(l1, [32, 16, 10])
 
 myNet.create()
 
 dataClean = []
 expectedClean = []
 
+#where we store the minibatch
+data = []
+
 #We will use 1600 images
+
+miniSize = 20
+
 
 #80 minibatches of 20
 for i in range(80):
       miniBatch = []
       expVals = []
-      for j in range(20):
-            miniBatch.append(Funcs.flatten(mnist.images[i*20 + j]))
-            expVals.append(Funcs.mnistExpectedBin(mnist.target[i*20 + j]))
+      for j in range(miniSize):
+            miniBatch.append(Funcs.flatten(mnist.images[i*miniSize + j]))
+            expVals.append(Funcs.mnistExpectedBin(mnist.target[i*miniSize + j]))
 
       expectedClean.append(expVals)
       dataClean.append(miniBatch)
 
 
-for i in range(len(dataClean)):
-      myNet.learn(dataClean[i], expectedClean[i])
+
+for i in tqdm(range(100), desc="Learning Data Set"):
+      for j in range(len(dataClean)):
+            myNet.learn(dataClean[j], expectedClean[j], data)
+
+            #currCost = myNet.getCost(expectedClean[j][j])
+
+plt.ion()
+
+plt.plot(data)
 
 
+messUp = []
 
-while True:
 
-      index = int(input("WHAT INDEX FROM MNIST WOULD YOU LIKE TO SAMPLE ON OUR NET \n"))
+for i in tqdm(range(1600), desc="finding success rate"):
 
-      print("THE TARGET VALUE FOR THIS INDEX IS " + str(mnist.target[index]) + "\n")
+      target = mnist.target[i]
 
-      myNet.activate(Funcs.flatten(mnist.images[index]), True)
-
-      print("THE OUTPUT LAYER IS AS FOLLOW \n")
-
-      print(myNet.getActivation(-1))
+      myNet.activate(Funcs.flatten(mnist.images[i]))
 
       maxInd = 0
-      for i in range(len(myNet.getActivation(-1))):
-            if myNet.getActivation(-1)[maxInd] < myNet.getActivation(-1)[i]:
-                  maxInd = i
 
-      print("THE NEURAL NET HAS GUESSED " + str(maxInd) + "\n")
+      for e in range(len(myNet.getActivation(-1))):
+            if myNet.getActivation(-1)[maxInd] < myNet.getActivation(-1)[e]:
+                  maxInd = e
+                  
 
-      continueStr = input("WOULD YOU LIKE TO TRY ANOTHER (y/n)" + "\n")
+      if maxInd != target:
+            messUp.append(i)
 
-      if continueStr == "n":
-            break
 
-      print("\n\n\n\n\n")
+print("success rate is " + str(((1600 - len(messUp))/1600) * 100) + "%")
+#print("bad Indexes: " + str(messUp))
+
+
+Funcs.asker(myNet, mnist)
 
 
 
@@ -78,6 +92,7 @@ for i in range(len(myNet) - 1):
 
 
 """
+
 
 
                               =============================
@@ -130,6 +145,57 @@ for i in range(len(dervis)):
                               =============================
 
 
+                              =============================
+
+                              Test CODE light
+
+                              =============================
+
+
+
+l1 = [0] * 2
+
+myNet = NeuralNetwork(l1, [2, 2, 1])
+
+myNet.create()
+
+myNet.activate([0.5,0.8])
+
+myNet.print()
+
+myNet.print(True)
+
+
+for i in range(len(myNet) - 1):
+      print("IN LAYER" + str(i + 1))
+
+      for j in range(len(myNet[i + 1])):
+            print("LEVEL" + str(j))
+            
+            print(myNet[i + 1][j].weight)
+            
+            print("bias: " + str(myNet[i + 1][j].bias))
+
+            print("\n")
+
+
+      print("\n\n")
+
+dervis = BP.getDerivatives([], 0, myNet, [], groundTruth = [0.75])
+
+
+for i in range(len(dervis)):
+      print("Layer " + str(i))
+      print(dervis[i])
+
+
+                              =============================
+
+                              Test CODE light end
+
+                              =============================
+
+
 
 
                               =============================
@@ -143,62 +209,75 @@ mnist = load_digits()
 
 l1 = [0] * 64
 
-myNet = NeuralNetwork(l1, [50,25,10])
+myNet = NeuralNetwork(l1, [32, 16, 10])
 
 myNet.create()
 
 dataClean = []
 expectedClean = []
 
+#where we store the minibatch
+data = []
+
 #We will use 1600 images
+
+miniSize = 20
+
 
 #80 minibatches of 20
 for i in range(80):
       miniBatch = []
       expVals = []
-      for j in range(20):
-            miniBatch.append(Funcs.flatten(mnist.images[i*20 + j]))
-            expVals.append(Funcs.mnistExpectedBin(mnist.target[i*20 + j]))
+      for j in range(miniSize):
+            miniBatch.append(Funcs.flatten(mnist.images[i*miniSize + j]))
+            expVals.append(Funcs.mnistExpectedBin(mnist.target[i*miniSize + j]))
 
       expectedClean.append(expVals)
       dataClean.append(miniBatch)
 
 
-for i in range(len(dataClean)):
-      myNet.learn(dataClean[i], expectedClean[i])
+
+for i in tqdm(range(100), desc="Learning Data Set"):
+      for j in range(len(dataClean)):
+            myNet.learn(dataClean[j], expectedClean[j], data)
+
+            #currCost = myNet.getCost(expectedClean[j][j])
+
+plt.ion()
+
+plt.plot(data)
 
 
+messUp = []
 
-while True:
 
-      index = int(input("WHAT INDEX FROM MNIST WOULD YOU LIKE TO SAMPLE ON OUR NET \n"))
+for i in tqdm(range(1600), desc="finding success rate"):
 
-      print("THE TARGET VALUE FOR THIS INDEX IS " + str(mnist.target[index]) + "\n")
+      target = mnist.target[i]
 
-      myNet.activate(Funcs.flatten(mnist.images[index]), True)
-
-      print("THE OUTPUT LAYER IS AS FOLLOW \n")
-
-      print(myNet.getActivation(-1))
+      myNet.activate(Funcs.flatten(mnist.images[i]))
 
       maxInd = 0
-      for i in range(len(myNet.getActivation(-1))):
-            if myNet.getActivation(-1)[maxInd] < myNet.getActivation(-1)[i]:
-                  maxInd = i
 
-      print("THE NEURAL NET HAS GUESSED " + str(maxInd) + "\n")
+      for e in range(len(myNet.getActivation(-1))):
+            if myNet.getActivation(-1)[maxInd] < myNet.getActivation(-1)[e]:
+                  maxInd = e
+                  
 
-      continueStr = input("WOULD YOU LIKE TO TRY ANOTHER (y/n)" + "\n")
+      if maxInd != target:
+            messUp.append(i)
 
-      if continueStr == "n":
-            break
 
-      print("\n\n\n\n\n")
+print("success rate is " + str(((1600 - len(messUp))/1600) * 100) + "%")
+#print("bad Indexes: " + str(messUp))
+
+
+Funcs.asker(myNet, mnist)
 
 
                               =============================
 
-                              GOOD CODE FOR MNIST
+                              GOOD CODE FOR MNIST END
 
                               =============================
 
