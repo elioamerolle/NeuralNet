@@ -19,6 +19,8 @@ class NeuralNetwork(list):
         
         self.layerDimensions.insert(0, len(inputValues))
         # adds the length of the input values
+
+        self.softMax = [0] * layerDimensions[-1]
     
     def create(self):
         # a function to fill the neural network
@@ -66,6 +68,17 @@ class NeuralNetwork(list):
         
         return self.inputValues
     
+
+    def activateSoftMax(self):
+        sum = 0
+
+        for i in self[-1]:
+            sum += i.getActivation()
+
+        for j in range(len(self.softMax)):
+            self.softMax[j] = self[-1][j].getActivation()/sum
+
+
     def activate(self, input, printBool = False):
         # activates all the perceptrons in the network
         if printBool:
@@ -83,6 +96,8 @@ class NeuralNetwork(list):
                 self[i + 1][j].activate()
                 # activates the individual perceptron
         
+        self.activateSoftMax()
+
         if printBool:
             print("finished activated")
     
@@ -230,7 +245,7 @@ class NeuralNetwork(list):
             fnlDervtvLst = Funcs.addMats(fnlDervtvLst, BP.getDerivatives([], 0, self, [], groundTruth = groundTruths[i]))
 
 
-        step = 1
+        step = 0.0002
 
         trashNet = copy.deepcopy(self)
 
@@ -241,7 +256,8 @@ class NeuralNetwork(list):
         
         sumTrash = 0
         sum = 0
-
+        
+        #Probab
         for i in range(len(minibatch)):
             trashNet.activate(minibatch[i])
             sumTrash += Funcs.cost(trashNet.getActivation(-1), groundTruths[i]) 
@@ -257,7 +273,7 @@ class NeuralNetwork(list):
         else:
             #print("might not get better")
 
-            step *= 0.1
+            #step *= 0.1
 
             self.update(fnlDervtvLst, step)
     
