@@ -22,7 +22,6 @@ class Perceptron:
             self.bias = 0
             # sets the bias to 0
 
-
     def setWeight(self, weight):
         # a function to set the weight
         if not self.isInputLayer:

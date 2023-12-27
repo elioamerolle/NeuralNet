@@ -2,6 +2,7 @@
 from Funcs import Funcs
 from backProp import BackPropagation as BP
 from Percept import Perceptron
+import math
 import copy
 
 
@@ -69,14 +70,15 @@ class NeuralNetwork(list):
         return self.inputValues
     
 
+    #Softmax Does not work it is not right setup need to use exp
     def activateSoftMax(self):
         sum = 0
 
         for i in self[-1]:
-            sum += i.getActivation()
+            sum += math.exp(i.getActivation())
 
         for j in range(len(self.softMax)):
-            self.softMax[j] = self[-1][j].getActivation()/sum
+            self.softMax[j] = math.exp(self[-1][j].getActivation())/sum
 
 
     def activate(self, input, printBool = False):

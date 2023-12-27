@@ -10,78 +10,41 @@ from Vars import Vars
 
 from tqdm import tqdm
 
+l1 = [0] * 2
 
-mnist = load_digits()
-
-l1 = [0] * 64
-
-myNet = NeuralNetwork(l1, [32, 16, 10])
+myNet = NeuralNetwork(l1, [2, 2, 2])
 
 myNet.create()
 
-dataClean = []
-expectedClean = []
+myNet.activate([0.5,0.8])
 
-#where we store the minibatch
-data = []
+myNet.print()
 
-#We will use 1600 images
+myNet.print(True)
 
-miniSize = 20
+print("SOFT MAX" + str(myNet.softMax))
 
+for i in range(len(myNet) - 1):
+      print("IN LAYER" + str(i + 1))
 
-#80 minibatches of 20
-for i in range(80):
-      miniBatch = []
-      expVals = []
-      for j in range(miniSize):
-            miniBatch.append(Funcs.flatten(mnist.images[i*miniSize + j]))
-            expVals.append(Funcs.mnistExpectedBin(mnist.target[i*miniSize + j]))
+      for j in range(len(myNet[i + 1])):
+            print("LEVEL" + str(j))
+            
+            print(myNet[i + 1][j].weight)
+            
+            print("bias: " + str(myNet[i + 1][j].bias))
 
-      expectedClean.append(expVals)
-      dataClean.append(miniBatch)
+            print("\n")
 
 
+      print("\n\n")
 
-for i in tqdm(range(100), desc="Learning Data Set"):
-      for j in range(len(dataClean)):
-            myNet.learn(dataClean[j], expectedClean[j], data)
-
-            #currCost = myNet.getCost(expectedClean[j][j])
-
-plt.ion()
-
-plt.plot(data)
+dervis = BP.getDerivatives([], 0, myNet, [], groundTruth = [0.75, 0.25])
 
 
-messUp = []
-
-
-for i in tqdm(range(1600), desc="finding success rate"):
-
-      target = mnist.target[i]
-
-      myNet.activate(Funcs.flatten(mnist.images[i]))
-
-      maxInd = 0
-
-      for e in range(len(myNet.getActivation(-1))):
-            if myNet.getActivation(-1)[maxInd] < myNet.getActivation(-1)[e]:
-                  maxInd = e
-                  
-
-      if maxInd != target:
-            messUp.append(i)
-
-
-print("success rate is " + str(((1600 - len(messUp))/1600) * 100) + "%")
-#print("bad Indexes: " + str(messUp))
-
-
-Funcs.asker(myNet, mnist)
-
-
-
+for i in range(len(dervis)):
+      print("Layer " + str(i))
+      print(dervis[i])
 
 """
 for i in range(len(myNet) - 1):
