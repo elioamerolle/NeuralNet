@@ -14,7 +14,7 @@ class Perceptron:
         self.indices = indices
 
         # randomized data:
-        self.bias = Funcs.rando() * 5
+        self.bias = 0
         self.weight = Funcs.randList(numberOfWeight)
         self.activation = None
         

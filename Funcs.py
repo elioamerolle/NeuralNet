@@ -2,9 +2,15 @@ import random
 from tkinter import DoubleVar
 from tokenize import Double
 import numpy as np 
+import math
+
 
 
 class Funcs:
+
+    def exponential_decay(epoch, initial_lr, decay_rate):
+        return initial_lr * math.exp(-decay_rate * epoch)
+
 
     def shuffle(lst):
 
@@ -61,7 +67,7 @@ class Funcs:
 
 
     def rando():
-        return (random.random() - 0.5) * 2
+        return np.random.uniform(-math.sqrt(6/(74)), math.sqrt(6/(74)))
 
 
     def cost(outPut, grndTrth):

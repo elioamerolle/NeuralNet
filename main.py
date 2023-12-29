@@ -13,13 +13,11 @@ from tqdm import tqdm
 
 
 
-
-
 mnistRaw = load_digits()
 
 l1 = [0] * 64
 
-myNet = NeuralNetwork(l1, [64, 40, 30, 10])
+myNet = NeuralNetwork(l1, [64, 30, 10])
 
 myNet.create()
 
@@ -36,14 +34,14 @@ for i in range(1600):
       mnistClean.append([Funcs.flatten(mnistRaw.images[i]), Funcs.mnistExpectedBin(mnistRaw.target[i])])
 
 learnR = 0.1
-count = 1
+decay_rate = 2
+
+
+count = 0
 
 for i in tqdm(range(20), desc="Learning Data Set"):
       dataClean = []
-      learnR *= 0.1 ** count
-
-      if learnR < 0.001:
-            learnR = 0.001
+      learnR = Funcs.exponential_decay(count, learnR, decay_rate)
 
       for i in range(80):
             miniBatch = []
