@@ -237,6 +237,28 @@ class NeuralNetwork(list):
                     print("Error index j " + str(j))
                     raise(IndexError("Wrong index"))
 
+
+    def learn(self, minibatch, data, learnR):
+        #Takes 3D array as input of form [[[Data for input layer], [Ground Truth]],...]
+        
+        #List with all the derivatives
+        fnlDervtvLst = []
+
+        data.append(self.getMiniBatchCost(minibatch))
+
+        #iterating through minibatch
+        for i in range(len(minibatch)):
+            #Has all the derivatives also 3D of form [[[dC/dw1],...],...]
+            self.activate(minibatch[i][0])
+
+            fnlDervtvLst = Funcs.addMats(fnlDervtvLst, BP.getDerivatives([], 0, self, [], groundTruth = minibatch[i][1]))
+
+        
+        self.update(fnlDervtvLst, learnR)
+
+        
+
+    """
     #function responsible for making the NN learn
     def learn(self, minibatch, groundTruths, data):
         #Takes 3D array as input of form [[[Data for input layer], [Ground Truth]],...]
@@ -285,7 +307,7 @@ class NeuralNetwork(list):
             #step *= 0.1
 
             self.update(fnlDervtvLst, step)
-    
+    """    
         
 
     def getCost(self, groundTruth):
@@ -325,13 +347,13 @@ class NeuralNetwork(list):
         
         return sum
 
-        
+    
 
-
-    def getMiniBatchCost(self, minibatch, groundTruths):
+    #Need to change
+    def getMiniBatchCost(self, minibatch):
         sum = 0
         for i in range(len(minibatch)):
-            sum += self.getCostFromIn(minibatch[i], groundTruths[i])
+            sum += self.getCostFromIn(minibatch[i][0], minibatch[i][1])
         
         return sum
 

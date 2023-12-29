@@ -1,3 +1,4 @@
+from random import shuffle
 from sklearn.datasets import load_digits
 import matplotlib.pyplot as plt
 
@@ -10,51 +11,89 @@ from Vars import Vars
 
 from tqdm import tqdm
 
-l1 = [0] * 2
 
-myNet = NeuralNetwork(l1, [5,3,2])
+
+
+
+mnistRaw = load_digits()
+
+l1 = [0] * 64
+
+myNet = NeuralNetwork(l1, [64, 40, 30, 10])
 
 myNet.create()
 
-myNet.activate([0.5, 0.8])
 
-myNet.print()
+#where we store the minibatch
+data = []
 
-myNet.print(True)
+#We will use 1600 images
+miniSize = 20
 
-print("SOFT MAX " + str(myNet.softMax))
+mnistClean = []
+
+for i in range(1600):
+      mnistClean.append([Funcs.flatten(mnistRaw.images[i]), Funcs.mnistExpectedBin(mnistRaw.target[i])])
+
+learnR = 0.1
+count = 1
+
+for i in tqdm(range(20), desc="Learning Data Set"):
+      dataClean = []
+      learnR *= 0.1 ** count
+
+      if learnR < 0.001:
+            learnR = 0.001
+
+      for i in range(80):
+            miniBatch = []
+      
+            for j in range(miniSize):
+                  miniBatch.append(mnistClean[i*miniSize + j])
+
+            dataClean.append(miniBatch)
+
+      for j in range(len(dataClean)):
+            myNet.learn(dataClean[j], data, learnR)
+
+      mnistClean = Funcs.shuffle(mnistClean)
+      count += 1
+
+plt.ion()
+
+plt.plot(data)
 
 
-for i in range(len(myNet) - 1):
-      print("IN LAYER" + str(i + 1))
+messUp = []
 
-      for j in range(len(myNet[i + 1])):
-            print("LEVEL" + str(j))
-            
-            print(myNet[i + 1][j].weight)
-            
-            print("bias: " + str(myNet[i + 1][j].bias))
+success = [0] * 10
 
-            print("\n")
+for i in tqdm(range(1600), desc="finding success rate"):
+
+      target = mnistRaw.target[i]
+
+      myNet.activate(Funcs.flatten(mnistRaw.images[i]))
+
+      maxInd = 0
+
+      for e in range(len(myNet.getActivation(-1))):
+            if myNet.getActivation(-1)[maxInd] < myNet.getActivation(-1)[e]:
+                  maxInd = e
+                  
+
+      if maxInd != target:
+            messUp.append(i)
+
+      else:
+            success[target] += 1
+
+print("success arr: ")
+print(success)
+print("success rate is " + str(((1600 - len(messUp))/1600) * 100) + "%")
+#print("bad Indexes: " + str(messUp))
 
 
-      print("\n\n")
-
-
-dervis = BP.getDerivatives([], 0, myNet, [], groundTruth = [0.75, 0.25])
-
-print("DERIVATIVES \n")
-
-for i in range(len(dervis)):
-      print("Layer " + str(i))
-      print(dervis[i])
-
-"""
-for i in range(len(myNet) - 1):
-      for j in range(len(myNet[i + 1])):
-            print("at " + str(i + 1) + ", " + str(j) + " " + str(dervis[i + 1][j]))
-
-"""
+Funcs.asker(myNet, mnistRaw)
 
 
 """

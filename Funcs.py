@@ -6,6 +6,15 @@ import numpy as np
 
 class Funcs:
 
+    def shuffle(lst):
+
+        arr = np.array(lst)
+
+        np.random.shuffle(arr)
+
+        return list(arr)
+
+
     def asker(myNet, mnist):
         while True:
     

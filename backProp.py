@@ -37,15 +37,12 @@ class BackPropagation(object):
                 dCbyds = 2 * (neuralNetwork.softMax[j] - groundTruth[j])
                 
                 if i == j:
-                    print("i == j went off")
                     dsbydz = neuralNetwork.softMax[j] * (1 - neuralNetwork.softMax[j])
                 else:
-                    print("else went off")
                     dsbydz = - neuralNetwork.softMax[i] * neuralNetwork.softMax[j]
                 
                 sum += dCbyds*dsbydz
 
-            print("Sum: " + str(sum))
             
             retList.append(sum)
 
