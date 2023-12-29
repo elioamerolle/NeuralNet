@@ -12,17 +12,18 @@ from tqdm import tqdm
 
 l1 = [0] * 2
 
-myNet = NeuralNetwork(l1, [2, 2, 2])
+myNet = NeuralNetwork(l1, [5,3,2])
 
 myNet.create()
 
-myNet.activate([0.5,0.8])
+myNet.activate([0.5, 0.8])
 
 myNet.print()
 
 myNet.print(True)
 
-print("SOFT MAX" + str(myNet.softMax))
+print("SOFT MAX " + str(myNet.softMax))
+
 
 for i in range(len(myNet) - 1):
       print("IN LAYER" + str(i + 1))
@@ -39,8 +40,10 @@ for i in range(len(myNet) - 1):
 
       print("\n\n")
 
+
 dervis = BP.getDerivatives([], 0, myNet, [], groundTruth = [0.75, 0.25])
 
+print("DERIVATIVES \n")
 
 for i in range(len(dervis)):
       print("Layer " + str(i))

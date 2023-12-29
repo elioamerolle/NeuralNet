@@ -3,11 +3,13 @@ from Funcs import Funcs
 
 class Perceptron:
 
-    def __init__(self, numberOfWeight, neuralNetwork, indices, isInputLayer = False):
+    def __init__(self, numberOfWeight, neuralNetwork, indices, isInputLayer = False, isOutputLayer = False):
         
         # defined properties:
         self.numberOfWeight = numberOfWeight
         self.isInputLayer = isInputLayer
+        self.isOutputLayer = isOutputLayer
+
         self.neuralNetwork = neuralNetwork
         self.indices = indices
 
@@ -84,17 +86,18 @@ class Perceptron:
     def preSigmoidActivation(self):
         # gets the layer depth
         layerDepth = self.indices[0]
-        
-        #print("perceptron index: " + str(self.indices))
-        #print("self.weight" + str(self.weight))
-        #print("self.neuralNetwork.getActivation" + str(self.neuralNetwork.getActivation(layerDepth - 1)))
-
 
         # gets the dot product of the weights and the bias
         return Funcs.dotPr(self.weight, self.neuralNetwork.getActivation(layerDepth - 1)) + self.bias
 
 
+
     def activate(self):
-        # gets the sig value of the dot product
-        self.activation = Funcs.sig(self.preSigmoidActivation())
-        
+        if self.isOutputLayer:
+            #Because we dont want nonlinearity before softmax
+            self.activation = self.preSigmoidActivation()
+
+        else:
+            # gets the sig value of the dot product
+            self.activation = Funcs.sig(self.preSigmoidActivation())
+            

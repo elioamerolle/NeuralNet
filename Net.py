@@ -6,6 +6,13 @@ import math
 import copy
 
 
+"""
+TODO: 
+ - Input values seems unecisary??
+ - fix the learn functions 
+
+"""
+
 class NeuralNetwork(list):
     # the class for the Neural Network that inherits properties and methods from the list data type
     
@@ -49,7 +56,7 @@ class NeuralNetwork(list):
                 if isInputLayer:
                     # checks if the current layer is an input
                     
-                    layeredList.append(Perceptron(0, self, [i, j], isInputLayer))
+                    layeredList.append(Perceptron(0, self, [i, j], True))
                     # adds a perceptron
                     
                     layeredList[-1].setActivation(self.inputValues[j])
@@ -58,7 +65,9 @@ class NeuralNetwork(list):
                 else:
                     # checks if the current layer is not an input
                     
-                    layeredList.append(Perceptron(self.layerDimensions[i - 1], self, [i, j]))
+                    isOutputLayer = (i == len(self.layerDimensions) - 1)
+
+                    layeredList.append(Perceptron(self.layerDimensions[i - 1], self, [i, j], False, isOutputLayer))
                     # adds a perceptron that isn't part of the input layer
             
             self.append(layeredList)
@@ -91,10 +100,10 @@ class NeuralNetwork(list):
 
         for i in range(len(self) - 1):
             # loops through each layers
-            # print(i)
+
             for j in range(len(self[i + 1])):
                 # loops through each perceptron
-                # print(j)
+
                 self[i + 1][j].activate()
                 # activates the individual perceptron
         
@@ -131,8 +140,6 @@ class NeuralNetwork(list):
                 returnWeightsList.append(perceptronData)
                 # adds the weight of the perceptron
             
-            #print(len(self[layerIndex]))
-            #print(len(returnWeightsList))
             
             returnList.append(returnWeightsList)
             # adds the weights list
@@ -239,7 +246,7 @@ class NeuralNetwork(list):
 
         data.append(self.getMiniBatchCost(minibatch, groundTruths))
 
-        #iterating throuhg minibatch
+        #iterating through minibatch
         for i in range(len(minibatch)):
             #Has all the derivatives also 3D of form [[[dC/dw1],...],...]
             self.activate(minibatch[i])
@@ -318,7 +325,7 @@ class NeuralNetwork(list):
         
         return sum
 
-        pass
+        
 
 
     def getMiniBatchCost(self, minibatch, groundTruths):

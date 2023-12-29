@@ -4,17 +4,50 @@ from Funcs import Funcs
 
 class BackPropagation(object):
     
-    #returns the derivates dCbyda * dabydz when we are starting out
-    def getFirstDerivatives(neuralNetwork, grounTruth):
+    """
+   
+    Goal:
+        -   need correct chain of derivatives to properly alter weights and biases
+            this would include acounting for softmax also get rid of of sigmoid in last layer
+
+    Procedure:
+        -   Currently have softmax working for activation but backprop
+        -   only need to change getFirstDerivatives
+
+        Cost is not a function of the softax layer so we need dC/ds*ds/da*da/dz
+    
+        ds/da = d/da(e^a/(e^a + const)) = e^a * (e^a + const)^-1 + (-((e^a + const)^-2) * e^2a)
+
+        so we should really be dealing with the z (presigact) instead of a (sigact)
+
+        dC/ds * ds/da * da/dw
+
+        2*(neuralNetwork.softMax[i] - groundTruth[i]) * d(neuralNetwork.softMax[i])/da
+
+    """
+
+    #returns the derivates dCbyda * dabydz when we are starting out 
+    def getFirstDerivatives(neuralNetwork, groundTruth):
         retList = []
         
         for i in range(neuralNetwork.layerDimensions[-1]):
-            perceptron  = neuralNetwork[-1][i]
 
-            dCbyda = 2*(perceptron.getActivation() - grounTruth[i])
-            dabydz = Funcs.sigDeriv(perceptron.preSigmoidActivation())
+            sum = 0
+            for j in range(neuralNetwork.layerDimensions[-1]):
+                dCbyds = 2 * (neuralNetwork.softMax[j] - groundTruth[j])
+                
+                if i == j:
+                    print("i == j went off")
+                    dsbydz = neuralNetwork.softMax[j] * (1 - neuralNetwork.softMax[j])
+                else:
+                    print("else went off")
+                    dsbydz = - neuralNetwork.softMax[i] * neuralNetwork.softMax[j]
+                
+                sum += dCbyds*dsbydz
 
-            retList.append(dCbyda*dabydz)
+            print("Sum: " + str(sum))
+            
+            retList.append(sum)
 
         return retList
 
@@ -42,11 +75,6 @@ class BackPropagation(object):
             - iterate throguh derivativeList and multiply elemnets by da/dz (increasing the number of elements for each comp)
 
             func(iter + 1, storedList, derivativeList)
-
-        TODO:
-
-            - Set up derivativeList for 0 < iteration
-            - Set up getting the derivatives for 0 < iteration
 
     """
 
