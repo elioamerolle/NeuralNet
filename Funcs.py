@@ -114,11 +114,10 @@ class Funcs:
 
         return retList
     
-    #not done
+    
     def addMats(l1,l2):
         numTypes = [int, DoubleVar]
 
-        #try:
         if len(l1) == 0:
             return l2
                 
@@ -135,8 +134,6 @@ class Funcs:
         else:
             TypeError("list lengths are not the same")
 
-        #except:
-            #raise TypeError("The two objects you are trying to add are incompatible")
 
 
 

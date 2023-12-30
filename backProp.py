@@ -34,7 +34,6 @@ class BackPropagation(object):
 
             sum = 0
             for j in range(neuralNetwork.layerDimensions[-1]):
-                #dCbyds = 2 * (neuralNetwork.softMax[j] - groundTruth[j])
                 
                 dCbyds = (1/10)*(neuralNetwork.softMax[j] - groundTruth[j])/(neuralNetwork.softMax[j] * (1 - neuralNetwork.softMax[j]))
 
