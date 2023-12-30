@@ -20,10 +20,10 @@ layerDimensions  = [64, 30, 10]
 # Number of images we will use
 nImages = 1600
 
-miniSize = 20
+miniSize = 5
 
 # Number of Epochs
-nEpochs = 20
+nEpochs = 2
 
 # learning rate
 learnR = 0.1
@@ -46,7 +46,8 @@ for i in range(nImages):
 
 
 # Saves cost function per mini batch
-data = []
+dataMSE = []
+dataLogLoss = []
 
 # Epoch counter to time loss of learning rate
 count = 0
@@ -69,7 +70,7 @@ for i in tqdm(range(nEpochs), desc="Learning Data Set"):
 
       # Learning step
       for j in range(len(dataClean)):
-            myNet.learn(dataClean[j], learnR, data)
+            myNet.learn(dataClean[j], learnR, dataMSE, dataLogLoss)
 
       mnistClean = Funcs.shuffle(mnistClean)
       count += 1
@@ -79,19 +80,45 @@ for i in tqdm(range(nEpochs), desc="Learning Data Set"):
 #                 AFTER THIS POINT ITS JUST TO CHECK THE NEURAL, NET TRAINING IS COMPLETE
 
 
-# Plotting cost function calues after each epoch
+# from ChapGPT 3.5
+
+# Plotting cost function calues after each epoch 
+# Create a range of x values based on the length of the lists
+x_values = range(len(dataMSE))
+
 plt.ion()
-plt.plot(data)
+
+# Plotting the data
+plt.plot(x_values, dataMSE, label='MSE', color='blue')  # Blue line for dataMSE
+plt.plot(x_values, dataLogLoss, label='Log Loss', color='orange')  # Orange line for dataLogLoss
+
+# Adding labels and title
+plt.xlabel('Index')
+plt.ylabel('Values')
+plt.title('Overlay of dataMSE and dataLogLoss')
+
+# Adding a legend
+plt.legend()
+
+# Show the plot
+plt.show()
+
+# from ChapGPT 3.5 end
+
+
+print("TESTING ON UNSEEN IMAGES")
 
 # Arrays to track success
-messUp = []
+countWrong = 0
 success = [0] * 10
 
-for i in tqdm(range(1600), desc="finding success rate"):
+nTestIm = 150
 
-      target = mnistRaw.target[i]
+for i in tqdm(range(nTestIm), desc="finding success rate"):
 
-      myNet.activate(Funcs.flatten(mnistRaw.images[i]))
+      target = mnistRaw.target[1601 + i]
+
+      myNet.activate(Funcs.flatten(mnistRaw.images[1601 + i]))
 
       maxInd = 0
 
@@ -101,15 +128,14 @@ for i in tqdm(range(1600), desc="finding success rate"):
                   
 
       if maxInd != target:
-            messUp.append(i)
+            countWrong += 1
 
       else:
             success[target] += 1
 
 print("success arr: ")
 print(success)
-print("success rate is " + str(((1600 - len(messUp))/1600) * 100) + "%")
-#print("bad Indexes: " + str(messUp))
+print("success rate is " + str(((nTestIm - countWrong)/nTestIm) * 100) + "%")
 
 
 Funcs.asker(myNet, mnistRaw)

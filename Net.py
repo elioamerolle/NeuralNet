@@ -185,12 +185,13 @@ class NeuralNetwork(list):
                     raise(IndexError("Wrong index"))
 
 
-    def learn(self, minibatch, learnR, data):
+    def learn(self, minibatch, learnR, dataMSE, dataLogLoss):
         
         #List with all the derivatives
         fnlDervtvLst = []
 
-        data.append(self.getMiniBatchCost(minibatch))
+        dataMSE.append(self.getMiniBatchCost(minibatch, "S"))
+        dataLogLoss.append(self.getMiniBatchCost(minibatch, "L"))
 
         #iterating through minibatch
         for i in range(len(minibatch)):
@@ -202,43 +203,47 @@ class NeuralNetwork(list):
         
         self.update(fnlDervtvLst, learnR)
 
-    
 
-    def getCost(self, groundTruth):
-        
-        sum = 0
-
-        for i in range(len(self[-1])):
-            if type(groundTruth) == list:
-                sum += (groundTruth[i] - self[-1][i].getActivation()) ** 2
-            else:
-                sum += (groundTruth - self[-1][i].getActivation()) ** 2
-
-        
-        return sum
-
-    
-    def getCostFromIn(self, input, groundTruth):
+    def getCostLog(self, input, groundTruth):
         sum = 0
 
         self.activate(input)
 
         for i in range(len(self[-1])):
             if type(groundTruth) == list:
-                sum += (groundTruth[i] - self[-1][i].getActivation()) ** 2
+                sum += groundTruth[i] * math.log(self.softMax[i]) + (1 - groundTruth[i]) * math.log(1 - self.softMax[i])
 
             else:
-                sum += (groundTruth - self[-1][i].getActivation()) ** 2
+                sum += groundTruth * math.log(self.softMax[i]) + (1 - groundTruth[i]) * math.log(1 - self.softMax[i])
 
-        
+        return -(1/len(self.softMax)) * sum
+
+    
+    def getCostL2(self, input, groundTruth):
+        sum = 0
+
+        self.activate(input)
+
+        for i in range(len(self[-1])):
+            if type(groundTruth) == list:
+                sum += (groundTruth[i] - self.softMax[i]) ** 2
+
+            else:
+                sum += (groundTruth - self.softMax[i]) ** 2
+
         return sum
 
     
 
-    def getMiniBatchCost(self, minibatch):
+    def getMiniBatchCost(self, minibatch, strIn):
         sum = 0
         for i in range(len(minibatch)):
-            sum += self.getCostFromIn(minibatch[i][0], minibatch[i][1])
-        
+            if strIn == "S":
+                sum += self.getCostL2(minibatch[i][0], minibatch[i][1])
+
+            else:
+                sum += self.getCostLog(minibatch[i][0], minibatch[i][1])
+
+
         return sum
 
