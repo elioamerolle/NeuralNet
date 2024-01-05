@@ -60,7 +60,7 @@ class Perceptron:
         self.bias -= deltaB * step
 
 
-    def setWeightBias(self, weight, bias):
+    def setWeighsubWeighttBias(self, weight, bias):
         # a function to set both the weight bias
         if not self.isInputLayer:
             self.setWeight(weight)

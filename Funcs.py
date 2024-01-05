@@ -73,8 +73,6 @@ class Funcs:
     def cost(outPut, grndTrth):
         numTypes = [int, DoubleVar, float]
         
-        #print(outPut)
-        #print(grndTrth)
 
         if (isinstance(outPut, list) and isinstance(grndTrth, list)) and (len(outPut) == len(grndTrth)):
             sum = 0
@@ -114,7 +112,7 @@ class Funcs:
 
         return retList
     
-    
+
     def addMats(l1,l2):
         numTypes = [int, DoubleVar]
 

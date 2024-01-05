@@ -12,12 +12,14 @@ class NeuralNetwork(list):
     
     # the initalizer for the input values and the layer dimensions
     def __init__(self, layerDimensions):
-
+        
         # stores the layered dimension
         self.layerDimensions = layerDimensions
         
         # where softmax values stored
         self.softMax = [0] * layerDimensions[-1]
+
+        self.succPrctg = 0
 
 
     # a function to fill the neural network
