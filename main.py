@@ -21,31 +21,30 @@ inStr = input("Would you like to test saved version or or train a new one s/t \n
 #                       =====================    Hyperparemters     =====================
 
 # Size of each layer (input and output are determined)
-layerDimensions = [64, 30, 10]
+layerDimensions = [64, 15, 10]
 
 # Number of images we will use
 nImages = 1600
 
-miniSize = 10
+miniSize = 7
 
 # Number of Epochs
-nEpochs = 3
+nEpochs = 2
 
 # learning rate
 learnR = 0.1
 
-# decay rate (exponential loss) I think something is off
-decay_rate = 2
+# decay rate 
+decay_rate = 1
+
+#If we repeat
+tryMulti = 0
 
 #                       =====================     Hyperparemters    =====================
 
 mnistRaw = load_digits()
 
 if inStr == "t":
-
-      # initilization of Neural Network
-      myNet = NeuralNetwork(layerDimensions)
-      myNet.create()
 
       # Loading the data set
       mnistClean = []
@@ -57,6 +56,11 @@ if inStr == "t":
       # Saves cost function per mini batch
       dataMSE = []
       dataLogLoss = []
+
+      #for i in tqdm(range(tryMulti), desc="Neural Net"):
+      # initilization of Neural Network
+      myNet = NeuralNetwork(layerDimensions)
+      myNet.create()
 
       # Epoch counter to time loss of learning rate
       count = 0
@@ -89,7 +93,7 @@ if inStr == "t":
       #                 AFTER THIS POINT ITS JUST TO CHECK THE NEURAL, NET TRAINING IS COMPLETE
 
 
-      # from ChapGPT 3.5
+      # from ChatGPT 3.5
 
       # Plotting cost function calues after each epoch 
       # Create a range of x values based on the length of the lists
@@ -112,7 +116,7 @@ if inStr == "t":
       # Show the plot
       plt.show()
 
-      # from ChapGPT 3.5 end
+      # from ChatGPT 3.5 end
 
 
       print("TESTING ON UNSEEN IMAGES")

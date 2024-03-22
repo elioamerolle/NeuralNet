@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 import random
 from tkinter import DoubleVar
 from tokenize import Double
@@ -27,12 +29,16 @@ class Funcs:
             index = int(input("WHAT INDEX FROM MNIST WOULD YOU LIKE TO SAMPLE ON OUR NET \n"))
 
             print("THE TARGET VALUE FOR THIS INDEX IS " + str(mnist.target[index]) + "\n")
+            
+            plt.ion()
+
+            plt.matshow(mnist.images[index])
 
             myNet.activate(Funcs.flatten(mnist.images[index]), True)
 
-            print("THE OUTPUT LAYER IS AS FOLLOW \n")
+            print("THE SOFTMAX LAYER IS AS FOLLOWS \n")
 
-            print(myNet.getActivation(-1))
+            print(myNet.softMax)
 
             maxInd = 0
             for i in range(len(myNet.getActivation(-1))):
@@ -40,6 +46,8 @@ class Funcs:
                         maxInd = i
 
             print("THE NEURAL NET HAS GUESSED " + str(maxInd) + "\n")
+            
+            plt.show()
 
 
             print("\n\n\n")
