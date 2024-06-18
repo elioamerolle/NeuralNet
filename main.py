@@ -17,6 +17,12 @@ from tqdm import tqdm
 
 inStr = input("Would you like to test saved version or or train a new one s/t \n")
 
+#                       =====================    Personal Preferences     =====================
+
+extra_prints = False
+
+#                       =====================    Personal Preferences     =====================
+
 
 #                       =====================    Hyperparemters     =====================
 
@@ -26,10 +32,10 @@ layerDimensions = [64, 15, 10]
 # Number of images we will use
 nImages = 1600
 
-miniSize = 7
+miniSize = 20
 
 # Number of Epochs
-nEpochs = 2
+nEpochs = 3
 
 # learning rate
 learnR = 0.1
@@ -38,7 +44,7 @@ learnR = 0.1
 decay_rate = 1
 
 #If we repeat
-tryMulti = 0
+tryMulti = 3
 
 #                       =====================     Hyperparemters    =====================
 
@@ -57,132 +63,51 @@ if inStr == "t":
       dataMSE = []
       dataLogLoss = []
 
-      #for i in tqdm(range(tryMulti), desc="Neural Net"):
-      # initilization of Neural Network
-      myNet = NeuralNetwork(layerDimensions)
-      myNet.create()
+      successOld = 0
 
-      # Epoch counter to time loss of learning rate
-      count = 0
-
-      for i in tqdm(range(nEpochs), desc="Learning Data Set"):
+      # We make several neural nets to pick the best one
+      for i in tqdm(range(tryMulti), desc="Neural Nets"):
             
-            dataClean = []
 
-            # updates the learning rate
-            learnR = Funcs.exponential_decay(count, learnR, decay_rate)
-            
-            # Cuts up MNIST into batches and puts into dataClean
-            for i in range(nImages//miniSize):
-                  miniBatch = []
-            
-                  for j in range(miniSize):
-                        miniBatch.append(mnistClean[i*miniSize + j])
+            # initilization of Neural Network
+            myNet = NeuralNetwork(layerDimensions)
+            myNet.create()
 
-                  dataClean.append(miniBatch)
+            # Epoch counter to time loss of learning rate
+            count = 0
 
-            # Learning step
-            for j in range(len(dataClean)):
-                  myNet.learn(dataClean[j], learnR, dataMSE, dataLogLoss)
-
-            mnistClean = Funcs.shuffle(mnistClean)
-            count += 1
+            for i in tqdm(range(nEpochs), desc="Learning Data Set"):
+                  Funcs.full_learn_cycle(myNet, mnistClean, nImages, miniSize, count, learnR, decay_rate, dataMSE, dataLogLoss)
+                  
+                  count += 1
 
 
 
-      #                 AFTER THIS POINT ITS JUST TO CHECK THE NEURAL, NET TRAINING IS COMPLETE
+            #                 AFTER THIS POINT ITS JUST TO CHECK THE NEURAL, NET TRAINING IS COMPLETE
 
-
-      # from ChatGPT 3.5
-
-      # Plotting cost function calues after each epoch 
-      # Create a range of x values based on the length of the lists
-      x_values = range(len(dataMSE))
-
-      plt.ion()
-
-      # Plotting the data
-      plt.plot(x_values, dataMSE, label='MSE', color='blue')  # Blue line for dataMSE
-      plt.plot(x_values, dataLogLoss, label='Log Loss', color='orange')  # Orange line for dataLogLoss
-
-      # Adding labels and title
-      plt.xlabel('Index')
-      plt.ylabel('Values')
-      plt.title('Overlay of dataMSE and dataLogLoss')
-
-      # Adding a legend
-      plt.legend()
-
-      # Show the plot
-      plt.show()
-
-      # from ChatGPT 3.5 end
-
-
-      print("TESTING ON UNSEEN IMAGES")
-
-      # Arrays to track success
-      countWrong = 0
-      success = [0] * 10
-
-      nTestIm = 150
-
-      for i in tqdm(range(nTestIm), desc="finding success rate"):
-
-            target = mnistRaw.target[1601 + i]
-
-            myNet.activate(Funcs.flatten(mnistRaw.images[1601 + i]))
-
-            maxInd = 0
-
-            for e in range(len(myNet.getActivation(-1))):
-                  if myNet.getActivation(-1)[maxInd] < myNet.getActivation(-1)[e]:
-                        maxInd = e
-                        
-
-            if maxInd != target:
-                  countWrong += 1
+            if(tryMulti == 1):
+                  #If we are only testing one neural net I want to see the loss over time
+                  Funcs.graphing(dataMSE, dataLogLoss)
 
             else:
-                  success[target] += 1
+                  # Arrays to track success
+                  current_success = Funcs.find_success(myNet, mnistRaw, 1601, 1751)
 
-      print("success arr: ")
-      print(success)
-      print("success rate is " + str(((nTestIm - countWrong)/nTestIm) * 100) + "%")
+                  if extra_prints:
+                        print("success on Unseen "+ str(current_success))
 
-      myNet.succPrctg = (((nTestIm - countWrong)/nTestIm) * 100)
+                                          #TEST WITHOUT PICKING THE BEST ONE 
+                  
+                  if(successOld < current_success):
+                        BestNet = myNet
+                        successOld = current_success
+            
 
-
-      print("TESTING ON SEEN IMAGES")
+      myNet = BestNet
 
       # Arrays to track success
-      countWrong = 0
-      success = [0] * 10
-
-      nTestIm = 150
-
-      for i in tqdm(range(1600), desc="finding success rate"):
-      
-            target = mnistRaw.target[i]
-
-            myNet.activate(Funcs.flatten(mnistRaw.images[i]))
-
-            maxInd = 0
-
-            for e in range(len(myNet.getActivation(-1))):
-                  if myNet.getActivation(-1)[maxInd] < myNet.getActivation(-1)[e]:
-                        maxInd = e
-                        
-
-            if maxInd != target:
-                  countWrong += 1
-
-            else:
-                  success[target] += 1
-
-      print("success arr: ")
-      print(success)
-      print("success rate is " + str(((1600 - countWrong)/1600) * 100) + "%")
+      print("success on seen " + str(Funcs.find_success(myNet, mnistRaw, 0, 1600)))
+      print("success on unseen " + str(Funcs.find_success(myNet, mnistRaw, 1601, 1751)))
 
 
       with open('net.pkl','rb') as netPikl:

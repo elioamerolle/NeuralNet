@@ -10,6 +10,84 @@ import math
 
 class Funcs:
 
+    def graphing(dataMSE, dataLogLoss):
+        # from ChatGPT 3.5
+
+        # Plotting cost function calues after each epoch 
+        # Create a range of x values based on the length of the lists
+        x_values = range(len(dataMSE))
+
+        plt.ion()
+
+        # Plotting the data
+        plt.plot(x_values, dataMSE, label='MSE', color='blue')  # Blue line for dataMSE
+        plt.plot(x_values, dataLogLoss, label='Log Loss', color='orange')  # Orange line for dataLogLoss
+
+        # Adding labels and title
+        plt.xlabel('Index')
+        plt.ylabel('Values')
+        plt.title('Overlay of dataMSE and dataLogLoss')
+
+        # Adding a legend
+        plt.legend()
+
+        # Show the plot
+        plt.show()
+
+        # from ChatGPT 3.5 end
+
+    def full_learn_cycle(myNet, mnistClean, nImages, miniSize, count, learnR, decay_rate, dataMSE, dataLogLoss):
+        dataClean = []
+        # populate data clean note that its alreadu in minibatches
+        Funcs.load_up_data(dataClean, mnistClean, nImages, miniSize)
+
+        # updates the learning rate
+        learnR = Funcs.exponential_decay(count, learnR, decay_rate)
+
+        # Learning step
+        for j in range(len(dataClean)):
+            myNet.learn(dataClean[j], learnR, dataMSE, dataLogLoss)
+
+        mnistClean = Funcs.shuffle(mnistClean)
+
+    def load_up_data(dataClean, mnistClean, nImages, miniSize):
+        # Cuts up MNIST into batches and puts into dataClean
+        for i in range(nImages//miniSize):
+            miniBatch = []
+        
+            for j in range(miniSize):
+                    miniBatch.append(mnistClean[i*miniSize + j])
+
+            dataClean.append(miniBatch)
+
+
+    def find_success(myNet, mnistRaw, start_ind, end_ind):
+        countWrong = 0
+        success = [0] * 10
+
+        nTestIm = end_ind - start_ind
+
+        for i in range(nTestIm):
+
+            target = mnistRaw.target[i + start_ind]
+
+            myNet.activate(Funcs.flatten(mnistRaw.images[i + start_ind]))
+
+            maxInd = 0
+
+            for e in range(len(myNet.getActivation(-1))):
+                    if myNet.getActivation(-1)[maxInd] < myNet.getActivation(-1)[e]:
+                        maxInd = e
+                        
+
+            if maxInd != target:
+                    countWrong += 1
+
+            else:
+                    success[target] += 1
+
+        return (nTestIm - countWrong)/nTestIm
+
     def exponential_decay(epoch, initial_lr, decay_rate):
         return initial_lr * math.exp(-decay_rate * epoch)
 
