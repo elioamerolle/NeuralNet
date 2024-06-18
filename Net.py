@@ -73,7 +73,7 @@ class NeuralNetwork(list):
     def activate(self, input, printBool = False):
         # activates all the perceptrons in the network
         if printBool:
-            print("we start activated")
+            print("activation start")
 
         for i in range(len(self[0])):
             self[0][i].setActivation(input[i])
@@ -87,7 +87,7 @@ class NeuralNetwork(list):
         self.activateSoftMax()
 
         if printBool:
-            print("finished activated")
+            print("activation end")
     
     def getPerceptronData(self):
         

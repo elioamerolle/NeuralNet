@@ -1,3 +1,4 @@
+import os
 from random import shuffle
 from sklearn.datasets import load_digits
 import matplotlib.pyplot as plt
@@ -15,11 +16,16 @@ import os
 
 from tqdm import tqdm
 
-inStr = input("Would you like to test saved version or or train a new one s/t \n")
+
+#i
+if os.path.exists("net.pkl"):
+      inStr = input("Would you like to test saved version or or train a new one s/t \n")
+else:
+      inStr = "t"
 
 #                       =====================    Personal Preferences     =====================
 
-extra_prints = False
+see_success_as_they_train = False
 
 #                       =====================    Personal Preferences     =====================
 
@@ -27,7 +33,7 @@ extra_prints = False
 #                       =====================    Hyperparemters     =====================
 
 # Size of each layer (input and output are determined)
-layerDimensions = [64, 15, 10]
+layerDimensions  = [64, 29, 10]
 
 # Number of images we will use
 nImages = 1600
@@ -35,16 +41,16 @@ nImages = 1600
 miniSize = 20
 
 # Number of Epochs
-nEpochs = 3
+nEpochs = 1
 
 # learning rate
 learnR = 0.1
 
-# decay rate 
-decay_rate = 1
+# decay rate (exponential loss)
+decay_rate = 2
 
 #If we repeat
-tryMulti = 3
+tryMulti = 1
 
 #                       =====================     Hyperparemters    =====================
 
@@ -79,6 +85,10 @@ if inStr == "t":
             for i in tqdm(range(nEpochs), desc="Learning Data Set"):
                   Funcs.full_learn_cycle(myNet, mnistClean, nImages, miniSize, count, learnR, decay_rate, dataMSE, dataLogLoss)
                   
+                  #randomize ordering
+                  mnistClean = Funcs.shuffle(mnistClean)
+
+                  #increase count for the decay rate
                   count += 1
 
 
@@ -93,8 +103,8 @@ if inStr == "t":
                   # Arrays to track success
                   current_success = Funcs.find_success(myNet, mnistRaw, 1601, 1751)
 
-                  if extra_prints:
-                        print("success on Unseen "+ str(current_success))
+                  if see_success_as_they_train:
+                        print("success on Unseen " + Funcs.sPerRound(current_success))
 
                                           #TEST WITHOUT PICKING THE BEST ONE 
                   
@@ -102,42 +112,52 @@ if inStr == "t":
                         BestNet = myNet
                         successOld = current_success
             
+      if(tryMulti > 1):
+            myNet = BestNet
 
-      myNet = BestNet
+      myNet.succPrctg = Funcs.find_success(myNet, mnistRaw, 1601, 1751)
+      print("The succptg is as follows " + str(myNet.succPrctg))
 
-      # Arrays to track success
-      print("success on seen " + str(Funcs.find_success(myNet, mnistRaw, 0, 1600)))
-      print("success on unseen " + str(Funcs.find_success(myNet, mnistRaw, 1601, 1751)))
+      print("success on seen " + Funcs.sPerRound(Funcs.find_success(myNet, mnistRaw, 0, 1600)))
+      print("success on unseen " + Funcs.sPerRound(myNet.succPrctg))
 
 
-      with open('net.pkl','rb') as netPikl:
-            oldNet = pickle.load(netPikl)
+      if os.path.exists("net.pkl"):
 
-      try:
-            if oldNet.succPrctg < myNet.succPrctg:
-                  inStr2 = input("This Neural Net is the best version you have found would you like to save it y/n \n")
+            with open('net.pkl','rb') as netPikl:
+                  oldNet = pickle.load(netPikl)
+
+            try:
+                  if oldNet.succPrctg < myNet.succPrctg:
+                        inStr2 = input("This Neural Net is the best version you have found would you like to save it y/n \n")
+                        
+                        if inStr2 == "y":
+                              os.remove("net.pkl")
+                              with open('net.pkl','wb') as netPikl:
+                                    pickle.dump(myNet, netPikl)
+            except:
+                  inStr2 = input("Would you like to save it y/n \n")
                   
                   if inStr2 == "y":
                         os.remove("net.pkl")
                         with open('net.pkl','wb') as netPikl:
                               pickle.dump(myNet, netPikl)
-      except:
-            inStr2 = input("Would you like to save it y/n \n")
-            
-            if inStr2 == "y":
-                  os.remove("net.pkl")
-                  with open('net.pkl','wb') as netPikl:
-                        pickle.dump(myNet, netPikl)
+      
+      else:
+            with open('net.pkl','wb') as netPikl:
+                  pickle.dump(myNet, netPikl)
+
 
 
       Funcs.asker(myNet, mnistRaw)
 
 else:
-
+      
       with open('net.pkl','rb') as netPikl:
             myNet = pickle.load(netPikl)
+
       
-      print("The success rate is: " + str(myNet.succPrctg) + "%")
+      print("The success rate on unseen images is: " + Funcs.sPerRound(myNet.succPrctg))
       print("indecese 1600 < are unseen")
 
       Funcs.asker(myNet, mnistRaw)
