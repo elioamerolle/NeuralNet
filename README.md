@@ -1,6 +1,6 @@
 # Neural Net from scratch
 
-This project aims to illustrate how neural nets work using the visual analogue (even at the cost of worse performance). Additionaly it does not use any Machine Learning specific libraries like pytorch or tenserflow (does use sklearn but only for the dataset), instead it uses numpy. The project was originially inspired by 3Blue1Brown's youtube series on [neural networks](https://www.youtube.com/watch?v=aircAruvnKk&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&ab_channel=3Blue1Brown).
+This project aims to illustrate how neural nets work using the visual analogue (even at the cost of worse performance). Additionaly it does not use any Machine Learning specific libraries like pytorch or tenserflow (does use sklearn but only for the dataset). The project was originially inspired by 3Blue1Brown's youtube series on [neural networks](https://www.youtube.com/watch?v=aircAruvnKk&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&ab_channel=3Blue1Brown).
 
 
 ## How To Run
