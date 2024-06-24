@@ -1,6 +1,6 @@
 # Neural Net from scratch
 
-This project aims to illustrate how neural nets work using the visual analogue (even at the cost of worse performance). Additionaly it does not use any Machine Learning specific libraries like pytorch or tenserflow (does use sklearn but only for the dataset). The project was originially inspired by 3Blue1Brown's youtube series on [neural networks](https://www.youtube.com/watch?v=aircAruvnKk&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&ab_channel=3Blue1Brown).
+This project aims to illustrate how neural networks function using the visual analogue (even at the cost of worse performance). Additionaly it does not use any Machine Learning specific libraries like pytorch or tenserflow (does use sklearn but only for the dataset). The project was originially inspired by 3Blue1Brown's youtube series on [neural networks](https://www.youtube.com/watch?v=aircAruvnKk&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&ab_channel=3Blue1Brown).
 
 
 ## How To Run
@@ -66,7 +66,7 @@ tryMulti = 1
 
 ```
 
-This allows you to tune how you want the neural net to train and how many neural nets you want (system will automatically choose the best). Additionally you can shoose to see extra print statements which gives more information as the neural nets train. If you elect to only run one neural net the loss function over time is also given.
+This allows you to tune how you want the neural net to train and how many neural nets you want (system will automatically choose the best). Additionally you can choose to see extra print statements which gives more information as the neural nets train. If you elect to only run one neural net the loss function over time is also given.
 
 *Note: Its useful to look that the git log to see which commits had what success rate (success rate given in commit message), from the commit you can retrieve the hyperperametrs*
 
