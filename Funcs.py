@@ -167,7 +167,9 @@ class Funcs:
 
     def asker(myNet, mnist):
         while True:
-    
+
+            plt.close("all")
+
             index = int(input("WHAT INDEX FROM MNIST WOULD YOU LIKE TO SAMPLE ON OUR NET \n"))
 
             targetVal = mnist.target[index]
@@ -206,6 +208,11 @@ class Funcs:
 
             print("\n\n\n")
 
+            inputStr = input("WOULD YOU LIKE TO CONTINUE (y/n) \n")
+
+            if inputStr == "n":
+                exit()
+            
 
     def mnistExpectedBin(x):
         retlist = [0] * 10

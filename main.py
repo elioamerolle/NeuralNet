@@ -3,25 +3,15 @@ from random import shuffle
 from sklearn.datasets import load_digits
 import matplotlib.pyplot as plt
 
-from TrainingData import TrainingData
 import json
 from Net import NeuralNetwork
 from backProp import BackPropagation as BP
 from Funcs import Funcs
-from Vars import Vars
 
 import pickle
 import os
 
-
 from tqdm import tqdm
-
-
-#i
-if os.path.exists("net.pkl"):
-      inStr = input("Would you like to test saved version or or train a new one s/t \n")
-else:
-      inStr = "t"
 
 #                       =====================    Personal Preferences     =====================
 
@@ -41,7 +31,7 @@ nImages = 1600
 miniSize = 20
 
 # Number of Epochs
-nEpochs = 1
+nEpochs = 4
 
 # learning rate
 learnR = 0.1
@@ -53,6 +43,13 @@ decay_rate = 2
 tryMulti = 1
 
 #                       =====================     Hyperparemters    =====================
+
+# if pickle does not exist have to train
+if os.path.exists("net.pkl"):
+      inStr = input("Would you like to test saved version or or train a new one s/t \n")
+else:
+      inStr = "t"
+
 
 mnistRaw = load_digits()
 
@@ -98,6 +95,9 @@ if inStr == "t":
             if(tryMulti == 1):
                   #If we are only testing one neural net I want to see the loss over time
                   Funcs.graphing(dataMSE, dataLogLoss)
+                  print("\n \n \n")
+                  input("HIT ENTER WHEN YOU ARE DONE LOOKING AT LOSS DATA \n")
+                  print("\n \n \n")
 
             else:
                   # Arrays to track success
@@ -148,6 +148,7 @@ if inStr == "t":
                   pickle.dump(myNet, netPikl)
 
 
+      print("indecese bigger than " + str(nImages) + " are unseen, stay below 1750")
 
       Funcs.asker(myNet, mnistRaw)
 
@@ -158,7 +159,7 @@ else:
 
       
       print("The success rate on unseen images is: " + Funcs.sPerRound(myNet.succPrctg))
-      print("indecese 1600 < are unseen")
+      print("indecese bigger than " + str(nImages) + " are unseen, stay below 1750")
 
       Funcs.asker(myNet, mnistRaw)
 

@@ -19,6 +19,7 @@ class NeuralNetwork(list):
         # where softmax values stored
         self.softMax = [0] * layerDimensions[-1]
 
+        # stores the success rate
         self.succPrctg = 0
 
 
