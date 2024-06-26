@@ -5,12 +5,20 @@ This project aims to illustrate how neural networks function using the visual an
 
 ## How To Run
 
-To run the project, it's required to use python version `3.0` or higher. Open the terminal or an external code editor and run the command `python main.py`. This project consists of the following dependencies with their respective versions. From the list below install the following packages using `pip` if you don't already have them installed. If you are using conda you can make your own environment and run the command 
+In order to run this project it is heavily recommended to have conda installed. This will greatly simplify the instillation process. If you have conda run the following commands 
+
+```sh
+conda create -n "testEnv"
+conda activate testEnv
+```
+
+Next you can run a shell script that installs all the necessary dependencies. This shell script will check if you have conda, pip and pip3 in that order and will attempt to install the necessary dependencies using the system available. If you have conda the environment used to develop the project is copied into the empty conda environment (testEnv) you have made
 
 ```sh
 sh install.sh
 ```
-to install all necessary packages. 
+
+The script installs python version 3.5.6 along with the packages:
 
 * matplotlib (3.0.3): Tool for graphing cost function over time and showing image of hand drawn number.
 * numpy (1.14.2): Used to optimize dot product.
@@ -18,7 +26,13 @@ to install all necessary packages.
 * tqdm (4.64.1): Imports loading bar to track progress
 * termcolor (1.1.0): Gives color to some terminal text
 
-*Note: To stop the running the program, run `Ctrl+C`.*
+It may be difficult to find a version of python that supports all of these packages with these exact versions since the version requirement of python can be shifted up by developers. I recommend just trying to install them without the version with python 3.7. Furthermore if you do not have conda and run the shell script it will still run however it will not install python for you and will install arbitrary versions of the packages. 
+
+Once you have completed the installation process you can run the project by running
+
+```sh
+python main.py
+```
 
 ## Documentation of Code
 
@@ -90,12 +104,26 @@ The program will ask you if you want to train a new neural net (using the hyperp
 Would you like to test saved version or or train a new one s/t
 ```
 
-If you delete the pkl file the program will automatically train and the prompt will not appear. Once finished training or if you are checking out an old version you will be asked to test your new neural network with the following prompt. If you are training only one neural net you will see the loss data at this stage and will be allowed to just hit enter to continue to the prompt below. 
+If you delete the pkl file the program will automatically train and the prompt will not appear. If you are training only one neural net you will see the loss data at this stage. Here Is an example of what the loss data might look like
+
+![Local Image](images/LossData.png "This is a local image")
+
+You will also be given the prompt 
+
+```sh
+HIT ENTER WHEN YOU ARE DONE LOOKING AT LOSS DATA 
+```
+
+From here you can hit enter to continue. At this point if you are testing a saved version or if you are continuing from the previous step you will be able to test the neural net with the prompt:
 
 ```sh
 indexes bigger than 1600 are unseen, stay below 1750
 WHAT INDEX FROM MNIST WOULD YOU LIKE TO SAMPLE ON OUR NET
 ```
 
-From here you can enter an integer between 0 and 1750 inclusive to test the neural network. Also the number 1600 is simply because of the hyperparameter nImages, we chose to train on that many images. At this point the program will produce an image of the image being tested on and give the confidences in the command line. 
+From here you can enter an integer between 0 and 1750 inclusive to test the neural network. Also the number 1600 is simply because of the hyperparameter nImages, we chose to train on that many images. At this point the program will produce an image of the image being tested on and give the confidences in the command line. The output will look something like:
+
+![Local Image](images/SampleOutPut.png "This is a local image")
+
+The coloring implies that this was the index with maximal confidence, green color is if it is the same as the target value and its red if it is different. You can then choose to continue by entering y or end the program by entering n. 
 

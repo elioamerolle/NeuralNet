@@ -28,6 +28,7 @@ layerDimensions  = [64, 29, 10]
 # Number of images we will use
 nImages = 1600
 
+# Batch Size
 miniSize = 20
 
 # Number of Epochs
