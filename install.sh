@@ -1,7 +1,5 @@
 #!/bin/sh
 
-#!/bin/sh
-
 # Check if conda is installed
 if command -v conda &> /dev/null
 then
