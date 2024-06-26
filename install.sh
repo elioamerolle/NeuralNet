@@ -18,7 +18,7 @@ else
         pip install numpy==1.14.2
         pip install scikit-learn==0.20.3
         pip install sklearn
-	    pip install tqdm==4.64.1
+	pip install tqdm==4.64.1
         pip install termcolor==1.1.0
     # Check if pip3 is installed
     elif command -v pip3 &> /dev/null
