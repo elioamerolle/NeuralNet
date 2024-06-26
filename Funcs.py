@@ -77,7 +77,7 @@ class Funcs:
 
     def shuffle(lst):
     
-        arr = np.array(lst)
+        arr = np.array(lst, dtype=object)
 
         np.random.shuffle(arr)
 

@@ -5,7 +5,12 @@ This project aims to illustrate how neural networks function using the visual an
 
 ## How To Run
 
-To run the project, it's required to use python version `3.0` or higher. Open the terminal or an external code editor and run the command `python main.py`. This project consists of the following dependencies with their respective versions. From the list below install the following packages using `pip` if you don't already have them installed.
+To run the project, it's required to use python version `3.0` or higher. Open the terminal or an external code editor and run the command `python main.py`. This project consists of the following dependencies with their respective versions. From the list below install the following packages using `pip` if you don't already have them installed. If you are using conda you can make your own environment and run the command 
+
+```sh
+sh install.sh
+```
+to install all necessary packages. 
 
 * matplotlib (3.0.3): Tool for graphing cost function over time and showing image of hand drawn number.
 * numpy (1.14.2): Used to optimize dot product.
