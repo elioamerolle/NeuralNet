@@ -20,7 +20,7 @@ see_success_as_they_train = False
 #                       =====================    Personal Preferences     =====================
 
 
-#                       =====================    Hyperparemters     =====================
+#                       =====================    Hyperparameters     =====================
 
 # Size of each layer (input and output are determined)
 layerDimensions  = [64, 29, 10]
@@ -42,7 +42,7 @@ decay_rate = 2
 #If we repeat
 tryMulti = 1
 
-#                       =====================     Hyperparemters    =====================
+#                       =====================     Hyperparameters    =====================
 
 # if pickle does not exist have to train
 if os.path.exists("net.pkl"):
@@ -148,7 +148,7 @@ if inStr == "t":
                   pickle.dump(myNet, netPikl)
 
 
-      print("indecese bigger than " + str(nImages) + " are unseen, stay below 1750")
+      print("indexes bigger than " + str(nImages) + " are unseen, stay below 1750")
 
       Funcs.asker(myNet, mnistRaw)
 
@@ -159,7 +159,7 @@ else:
 
       
       print("The success rate on unseen images is: " + Funcs.sPerRound(myNet.succPrctg))
-      print("indecese bigger than " + str(nImages) + " are unseen, stay below 1750")
+      print("indexes bigger than " + str(nImages) + " are unseen, stay below 1750")
 
       Funcs.asker(myNet, mnistRaw)
 
