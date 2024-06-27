@@ -26,7 +26,7 @@ The script installs python version 3.5.6 along with the packages:
 * tqdm (4.64.1): Imports loading bar to track progress
 * termcolor (1.1.0): Gives color to some terminal text
 
-It may be difficult to find a version of python that supports all of these packages with these exact versions since the version requirement of python can be shifted up by developers. I recommend just trying to install them without the version with python 3.7. Furthermore if you do not have conda and run the shell script it will still run however it will not install python for you and will install arbitrary versions of the packages. 
+It may be difficult to find a version of python that supports all of these packages with these exact versions. I recommend trying to install them without the version with python 3.7. 
 
 Once you have completed the installation process you can run the project by running
 
@@ -45,6 +45,10 @@ The following code contains contains 4 classes that allow the program to run.
 * `BackPropagation`: Deals with the finding the actual gradient, also  probably the most math heavy/interesting part.
 
 * `Funcs`: Stores a wide range of useful functions that deal with dot product optimization, random initialization for perceptron weights, exponential decay of learning rate, user interface, etc.
+
+### Error Handling
+
+There is also a fair amount of error handling, especially inside the perceptron class. This is to ensure that meaningless (probably erroneous) actions do not take place. For example if a is making a new function in the NeuralNetwork class that edits perceptron however during runtime this function attempts to change the weights associated with an input perceptron this would be a meaningless action and thus it is appropriate to raise an error. 
 
 ## How To Use
 
@@ -98,6 +102,8 @@ As previously stated, once all the packages are installed, you can directly run 
 python main.py
 ```
 
+#### Initial Prompts
+
 The program will ask you if you want to train a new neural net (using the hyperparameter in main.py) or if you would like to test an old neural network stored in a pkl file with the following prompt (enter s for saved and t for train and return).
 
 ```sh
@@ -106,7 +112,9 @@ Would you like to test saved version or or train a new one s/t
 
 If you delete the pkl file the program will automatically train and the prompt will not appear. If you are training only one neural net you will see the loss data at this stage. Here Is an example of what the loss data might look like
 
-![Local Image](images/LossData.png "This is a local image")
+#### Data Loss over Minibatches
+
+![Local Image](images/LossData.png)
 
 You will also be given the prompt 
 
@@ -121,9 +129,11 @@ indexes bigger than 1600 are unseen, stay below 1750
 WHAT INDEX FROM MNIST WOULD YOU LIKE TO SAMPLE ON OUR NET
 ```
 
+#### Sample Output
+
 From here you can enter an integer between 0 and 1750 inclusive to test the neural network. Also the number 1600 is simply because of the hyperparameter nImages, we chose to train on that many images. At this point the program will produce an image of the image being tested on and give the confidences in the command line. The output will look something like:
 
-![Local Image](images/SampleOutPut.png "This is a local image")
+![Local Image](images/SampleOutPut.png)
 
-The coloring implies that this was the index with maximal confidence, green color is if it is the same as the target value and its red if it is different. You can then choose to continue by entering y or end the program by entering n. 
+The coloring implies that this was the index with maximal confidence, green color is if it is the same as the target value and its red if it is different. You can then choose to continue by entering y or end the program by entering n.
 
