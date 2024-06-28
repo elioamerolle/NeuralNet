@@ -1,10 +1,9 @@
+import math
+import numpy as np 
 import matplotlib.pyplot as plt
 
-import random
 from tkinter import DoubleVar
 from tokenize import Double
-import numpy as np 
-import math
 from termcolor import colored
 
 

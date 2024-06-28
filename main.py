@@ -1,17 +1,13 @@
 import os
-from random import shuffle
-from sklearn.datasets import load_digits
-import matplotlib.pyplot as plt
-
-import json
-from Net import NeuralNetwork
-from backProp import BackPropagation as BP
-from Funcs import Funcs
-
 import pickle
-import os
 
 from tqdm import tqdm
+from random import shuffle
+from sklearn.datasets import load_digits
+
+from Net import NeuralNetwork
+from Funcs import Funcs
+
 
 #                       =====================    Personal Preferences     =====================
 

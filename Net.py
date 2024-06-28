@@ -1,16 +1,14 @@
+import math
 
 from Funcs import Funcs
 from backProp import BackPropagation as BP
 from Percept import Perceptron
-import math
-import copy
-
 
 
 # the class for the Neural Network that inherits properties and methods from the list data type
 class NeuralNetwork(list):
     
-    # the initalizer for the input values and the layer dimensions
+    # the initializer for the input values and the layer dimensions
     def __init__(self, layerDimensions):
         
         # stores the layered dimension
