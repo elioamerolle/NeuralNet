@@ -26,7 +26,7 @@ The script installs python version 3.5.6 along with the packages:
 * tqdm (4.64.1): Imports loading bar to track progress
 * termcolor (1.1.0): Gives color to some terminal text
 
-It may be difficult to find a version of python that supports all of these packages with these exact versions. I recommend trying to install them without the version with python 3.7. 
+If you do not have conda it may be difficult to find a version of python that supports all of these packages with these exact versions. I recommend trying to installing python 3.7 and the dependencies without the versions numbers. 
 
 Once you have completed the installation process you can run the project by running
 
@@ -48,7 +48,7 @@ The following code contains contains 4 classes that allow the program to run.
 
 ### Error Handling
 
-There is also a fair amount of error handling, especially inside the perceptron class. This is to ensure that meaningless (probably erroneous) actions do not take place. For example if a is making a new function in the NeuralNetwork class that edits perceptron however during runtime this function attempts to change the weights associated with an input perceptron this would be a meaningless action and thus it is appropriate to raise an error. 
+There is also a fair amount of error handling, especially inside the perceptron class. This is to ensure that meaningless (probably erroneous) actions do not take place. For example suppose a user is making a new function in the NeuralNetwork class that edits a perceptron. During runtime this function attempts to change the weights associated with an input perceptron this would be a meaningless action and thus it is appropriate to raise an error. 
 
 ## How To Use
 
@@ -91,7 +91,7 @@ tryMulti = 1
 
 This allows you to tune how you want the neural net to train and how many neural nets you want (system will automatically choose the best). Additionally you can choose to see extra print statements which gives more information as the neural nets train. If you elect to only run one neural net the loss function over time is also given.
 
-*Note: Its useful to look that the git log to see which commits had what success rate (success rate given in commit message), from the commit you can retrieve the hyperparameter*
+*Note: Its useful to look that the git log to see which commits had what success rate (success rate given in commit message), from the commit you can retrieve the hyperparameters*
 
 
 ### Basic Setup
@@ -110,13 +110,13 @@ The program will ask you if you want to train a new neural net (using the hyperp
 Would you like to test saved version or or train a new one s/t
 ```
 
-If you delete the pkl file the program will automatically train and the prompt will not appear. If you are training only one neural net you will see the loss data at this stage. Here Is an example of what the loss data might look like
+If you delete the pkl file the program will automatically train and the prompt will not appear. If you are training only one neural net you will see the loss data at this stage. Here Is an example of what the loss data might look like:
 
-#### Data Loss over Minibatches
+#### Cost over Minibatches
 
 ![Local Image](images/LossData.png)
 
-You will also be given the prompt 
+The above image graphs the Mean Square Error (MSE) and Log loss. You will also be given the prompt 
 
 ```sh
 HIT ENTER WHEN YOU ARE DONE LOOKING AT LOSS DATA 
@@ -129,9 +129,11 @@ indexes bigger than 1600 are unseen, stay below 1750
 WHAT INDEX FROM MNIST WOULD YOU LIKE TO SAMPLE ON OUR NET
 ```
 
+From here you can enter an integer between 0 and 1750 inclusive to test the neural network. Also the number 1600 is simply because of the hyperparameter nImages, we chose to train on that many images.
+
 #### Sample Output
 
-From here you can enter an integer between 0 and 1750 inclusive to test the neural network. Also the number 1600 is simply because of the hyperparameter nImages, we chose to train on that many images. At this point the program will produce an image of the image being tested on and give the confidences in the command line. The output will look something like:
+ At this point the program will produce an image of the data point being tested on and give the confidences in the command line. The output will look something like:
 
 ![Local Image](images/SampleOutPut.png)
 
