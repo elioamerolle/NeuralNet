@@ -7,7 +7,7 @@ verify_package_installation(){
     missing_packages=""
 
     for package in packages; do
-        if ! conda list | grep package
+        if ! conda list | grep package; then
             missing_packages = "$missing_packages package"
         fi 
     done
@@ -18,7 +18,7 @@ verify_package_installation(){
     else
         echo "Succesfully installed all packages"
         exit 0
-
+    fi
 }
 
 
