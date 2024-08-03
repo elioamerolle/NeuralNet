@@ -1,7 +1,10 @@
 # Neural Net from scratch
 
-This project aims to illustrate how neural networks function using the visual analogue (even at the cost of worse performance). Additionally it does not use any Machine Learning specific libraries like pytorch or TensorFlow (does use sklearn but only for the dataset). The project was originally inspired by 3Blue1Brown's youtube series on [neural networks](https://www.youtube.com/watch?v=aircAruvnKk&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&ab_channel=3Blue1Brown).
+This project aims to illustrate how neural networks function using the visual analogue (even at the cost of worse performance). Additionally it does not use any Machine Learning specific libraries like pytorch or TensorFlow (does use sklearn but only for the dataset). The project was originally inspired by 3Blue1Brown's youtube series on [neural networks](https://www.youtube.com/watch?v=aircAruvnKk&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&ab_channel=3Blue1Brown). 
  
+## Basic Architecture
+
+In this neural network, each layer is fully connected to the subsequent layer, meaning every neuron in one layer is linked to every neuron in the next. Each neuron utilizes the [Sigmoid Activation Function](https://en.wikipedia.org/wiki/Sigmoid_function) Function to introduce non-linearity. For the final layer, the perceptrons' values are processed through the [Softmax Function](https://en.wikipedia.org/wiki/Softmax_function) to generate probabilities for each possible input class. The network uses [Log Loss](https://en.wikipedia.org/wiki/Loss_functions_for_classification#Logistic_loss) as the [Cost Function](https://en.wikipedia.org/wiki/Loss_function), and the learning process is [Stochastic Gradient Descent (SGD)](https://en.wikipedia.org/wiki/Stochastic_gradient_descent).
 
 ## How To Run
 
