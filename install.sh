@@ -1,14 +1,17 @@
 #!/bin/sh
 
-packages_for_installation="matplotlib numpy scikit-learn sklearn install tqdm termcolor"
+packages_for_installation="matplotlib numpy tqdm termcolor scikit-learn"
 
 verify_package_installation(){
     packages=$1
     missing_packages=""
 
-    for package in packages; do
-        if ! conda list | grep package; then
-            missing_packages = "$missing_packages package"
+    for package in $packages; do
+        echo "verifying $package"
+        if ! conda list | grep -q $package; then
+            echo "if went off"
+            echo "missing_packages: $missing_packages"
+            missing_packages="$missing_packages $package"
         fi 
     done
 
@@ -16,11 +19,10 @@ verify_package_installation(){
         echo "WARNING: The following packages failed to install: $missing_packages"
         exit 1
     else
-        echo "Succesfully installed all packages"
+        echo "Successfully installed all packages"
         exit 0
     fi
 }
-
 
 # Check if conda is installed
 if command -v conda &> /dev/null
@@ -30,7 +32,10 @@ then
 
 
     if [ "$num_packages" -eq 0 ]; then
-        conda env update --name $current_env --file environment.yml --prune
+        for package in $packages_for_installation; do
+            conda install -y conda-forge::$package
+        done
+
         verify_package_installation $packages_for_installation
 
     else
